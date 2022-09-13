@@ -1,5 +1,7 @@
 import "./App.css";
 import { useState } from "react";
+import 'bootstrap/dist/css/bootstrap.min.css'
+import { Alert } from '@coreui/bootstrap-react';
 
 
 const options = {
