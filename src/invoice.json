@@ -1,0 +1,60 @@
+{
+  "created_by_user_id": "string",
+  "date_issued": "2019-08-24T14:15:22Z",
+  "invoice_id": "string",
+  "contact_id": "string",
+  "payment_terms": {
+    "name": "string",
+    "description": "string",
+    "terms": {
+      "property1": {
+        "days": 0,
+        "discount": 0,
+        "penalty": 0
+      },
+      "property2": {
+        "days": 0,
+        "discount": 0,
+        "penalty": 0
+      }
+    }
+  },
+  "payment_online_enabled": false,
+  "payment_instructions": {},
+  "billing_period_start": "string",
+  "billing_period_end": "string",
+  "line_items": {
+    "Item1": {
+      "name": "string",
+      "description": "string",
+      "price": 0,
+      "rate_type": "Hourly",
+      "tax_rate": 0,
+      "quantity": 0,
+      "total": 0,
+      "tags": [
+        null
+      ]
+    },
+    "Item2": {
+      "name": "string",
+      "description": "string",
+      "price": 0,
+      "rate_type": "Hourly",
+      "tax_rate": 0,
+      "quantity": 0,
+      "total": 0,
+      "tags": [
+        null
+      ]
+    }
+  },
+  "tax_rate": 0,
+  "total_tax": 0,
+  "total_due": 0,
+  "total_discount": 0,
+  "status": "string",
+  "parent_project_id": "string",
+  "deposit_amount": 0,
+  "recurring_frequency": "Weekly"
+}
