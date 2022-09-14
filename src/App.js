@@ -20,7 +20,7 @@ const liveUrl = "https://api.slickco.io/invoices"
 
 function App() {
   const [created_by_user_id, setCreated_by_user_id] = useState("");
-  const [date_issued, setDate_issued] = useState(Date.UTC);
+  const [date_issued, setDate_issued] = useState(Date);
   const [invoice_id, setInvoice_id] = useState("");
   const [contact_id, setContact_id] = useState("");
   const [payment_terms, setPayment_Terms] = useState("");
@@ -102,7 +102,7 @@ function App() {
         headers: options.headers,
         body: JSON.stringify({
           created_by_user_id: created_by_user_id,
-          date_issued: "2019-08-24T14:15:22Z",
+          date_issued: Date(date_issued),
           // date_issued: date_issued,
           invoice_id: invoice_id,
           contact_id: contact_id,
@@ -126,7 +126,7 @@ function App() {
       let resJson = await res.json();
       if (res.status === 200) {
         setCreated_by_user_id("");
-        setDate_issued("");
+        setDate_issued(Date);
         setInvoice_id("");
         setContact_id("");
         setMessage("Invoice created successfully");

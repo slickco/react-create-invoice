@@ -20,7 +20,7 @@ const liveUrl = "https://api.slickco.io/invoices"
 
 function NewInvoice() {
   const [created_by_user_id, setCreated_by_user_id] = useState("");
-  const [date_issued, setDate_issued] = useState(Date.UTC);
+  const [date_issued, setDate_issued] = useState();
   const [invoice_id, setInvoice_id] = useState("");
   const [contact_id, setContact_id] = useState("");
   const [payment_terms, setPayment_Terms] = useState("");
@@ -128,8 +128,7 @@ function NewInvoice() {
         headers: options.headers,
         body: JSON.stringify({
           created_by_user_id: created_by_user_id,
-          date_issued: "2019-08-24T14:15:22Z",
-          // date_issued: date_issued,
+          date_issued: new Date(date_issued),
           invoice_id: invoice_id,
           contact_id: contact_id,
           payment_terms: thesePaymentTerms,
@@ -166,191 +165,182 @@ function NewInvoice() {
 
     return (
         <div className="App">
-            <CContainer sm>
-        <CForm className="row g-3" onSubmit={handleSubmit} >
+      {/* <form onSubmit={handleSubmit}> */}
+    <CContainer>
+        <CForm className="row g-3" onSubmit={handleSubmit}>
+          <CRow>
+          <CCol xs={12} className="d-grid gap-2 d-md-flex justify-content-md-end">
+                <CButton type="submit" className="me-md-2">send</CButton>
+            </CCol>
+          </CRow>
 
-        <CCol xs={12} className="d-grid gap-2 d-md-flex justify-content-md-end">
-    <CButton type="submit" className="me-md-2" >send</CButton>
-  </CCol>
-
-  <h3>Contact Info</h3>
-  <CRow>
-  <CCol md={6}>
-  <CFormLabel>Your email</CFormLabel>
-    <CFormInput type="email" id="yourEmail" label="Email" 
-    value={created_by_user_id}
-    onChange={(e) =>setCreated_by_user_id(e.target.value)} />
-  </CCol>
-
-  <CCol md={6}>
-  <CFormLabel>Customers email</CFormLabel>
-    <CFormInput type="email" id="theirEmail" label="Email"
-    value={contact_id}
-    onChange={(e) =>setContact_id(e.target.value)} />
-  </CCol>
-  </CRow>
-
-<p></p>
-
-
-<h3>Invoice Details</h3>
-<CRow className="justify-content-between">
-  <CCol xs={3}>
-  <CFormLabel>Issue Date</CFormLabel>
-    <CFormInput type="date" id="date_issued" label="Issue Date"
-    value={date_issued}
-    onChange={(e) =>setDate_issued(e.target.valueAsDate)}
-    />
-  </CCol>
-
-  <CCol sm={6}>
-    <CFormLabel>Invoice Number</CFormLabel>
-    <CFormInput type="text"
-    value={invoice_id}
-    onChange={(e) =>setInvoice_id(e.target.valueAsDate)}
-    />
-  </CCol>
-
-  {/* <CCol md={6}>
-    <CFormLabel>Reference / PO Number</CFormLabel>
-    <CFormInput type="text"
-    />
-  </CCol> */}
-  
-  </CRow>
-
-  <h3>Line Items</h3>
-
-  {/* ITEMS */}
-{/* <div id="item headers"> */}
-    <CListGroup flush id="item headers">
-            <CListGroupItem>
+            <h3>Contact Info</h3>
             <CRow className="justify-content-between">
-            <CCol xs={3}>
-            <CFormLabel>Item name</CFormLabel>
-            </CCol>
-            <CCol xs={2}>
-            <CFormLabel>Price</CFormLabel>
-            </CCol>
-            <CCol xs={2}>
-            <CFormLabel>Qty</CFormLabel>
-            </CCol>
-            <CCol xs={2}>
-            <CFormLabel>Total</CFormLabel>
-            </CCol>
-            <CCol xs={3}></CCol>
+                <CCol md={6}>
+                    <CFormLabel>First Name</CFormLabel>
+                    <CFormInput type="text" id="firstname" label="firstname" 
+                    // value={created_by_user_id} onChange={(e)=>setCreated_by_user_id(e.target.value)} 
+                    />
+                </CCol>
+                <CCol md={6}>
+                    <CFormLabel>Last Name</CFormLabel>
+                    <CFormInput type="text" id="lastname" label="lastname" 
+                    // value={contact_id} onChange={(e)=>setContact_id(e.target.value)} 
+                    />
+                </CCol>
+            </CRow>
+            <CRow className="justify-content-between">
+                <CCol md={6}>
+                    <CFormLabel>Your email</CFormLabel>
+                    <CFormInput type="email" id="yourEmail" label="yourEmail" value={created_by_user_id} onChange={(e)=>setCreated_by_user_id(e.target.value)} />
+                </CCol>
+                <CCol md={6}>
+                    <CFormLabel>Customers email</CFormLabel>
+                    <CFormInput type="email" id="theirEmail" label="theirEmail" value={contact_id} onChange={(e)=>setContact_id(e.target.value)} />
+                </CCol>
+            </CRow>
+
+
+            <p></p>
+            <h3>Invoice Details</h3>
+            <CRow className="justify-content-between">
+                <CCol sm="auto">
+                    <CFormLabel>Issue Date</CFormLabel>
+                    <CFormInput type="date" id="date_issued" label="Issue Date" 
+                    value={date_issued} 
+                    onChange={(e)=>setDate_issued(e.target.value)} />
+                </CCol>
+            </CRow>
+            <p></p>
+            <CRow className="justify-content-between">
+                <CCol sm="2">
+                    <CFormLabel>Invoice Number</CFormLabel>
+                    <CFormInput type="text" value={invoice_id} onChange={(e)=>setInvoice_id(e.target.valueAsDate)} />
+                </CCol>
+                <CCol sm="2">
+                    <CFormLabel>Reference / PO Number</CFormLabel>
+                    <CFormInput type="text" />
+                </CCol>
+            </CRow>
+            <p></p>
+            <CRow className="justify-content-between">
+                <CCol sm="2">
+                    <CFormLabel>Payment terms</CFormLabel>
+                    <CFormSelect id="terms" label="terms">
+                        <option>Net 30</option>
+                        <option>Same Day</option>
+                    </CFormSelect>
+                </CCol>
+                <CCol sm="2">
+                    <CFormLabel>Due Date</CFormLabel>
+                    <CFormInput type="date" id="dueDate" label="duedate" />
+                </CCol>
+            </CRow>
+            <p></p>
+            <CRow className="justify-content-between">
+                <CCol sm="auto">
+                    <CFormCheck type="checkbox" id="gridCheck" label="Send reminders" />
+                </CCol>
+            </CRow>
+            <p></p>
+            <CRow className="justify-content-between">
+                <CCol sm="2">
+                    <CFormLabel>Recurring Invoice</CFormLabel>
+                    <CFormSelect id="frequency" label="frequency" placeholder="Frequency">
+                        <option>Weekly</option>
+                        <option>Monthly</option>
+                        <option>Quarterly</option>
+                    </CFormSelect>
+                </CCol>
+            </CRow>
+            <h3>Line Items</h3> <CListGroup flush id="item headers">
+                    <CListGroupItem>
+                        <CRow className="justify-content-between">
+                            <CCol xs={4}>
+                                <CFormLabel>Item name</CFormLabel>
+                            </CCol>
+                            <CCol xs>
+                                <CFormLabel>Price</CFormLabel>
+                            </CCol>
+                            <CCol xs>
+                                <CFormLabel>Qty</CFormLabel>
+                            </CCol>
+                            <CCol xs>
+                                <CFormLabel>Total</CFormLabel>
+                            </CCol>
+                            <CCol xs></CCol>
+                        </CRow>
+                    </CListGroupItem>
+                </CListGroup> {/* </div> */} {itemFields.map((form, index) => { return ( // <div key={index}>
+                <CListGroup flush key={index}>
+                    <CListGroupItem>
+                        <CRow className="justify-content-between">
+                            <CCol xs="4"> {/* <CFormLabel>Item name</CFormLabel> */} <CFormInput name='name' placeholder='Name' onChange={event=> handleFormChange(event, index)} value={form.name} /> </CCol>
+                            <CCol xs> {/* <CFormLabel>Price</CFormLabel> */} <CFormInput name='price' placeholder='0' onChange={event=> handleFormChange(event, index)} value={form.price} /> </CCol>
+                            <CCol xs> {/* <CFormLabel>Qty</CFormLabel> */} <CFormInput name='quantity' placeholder='quantity' onChange={event=> handleFormChange(event, index)} value={form.quantity} /> </CCol>
+                            <CCol xs> {/* <CFormLabel>Total</CFormLabel> */} <CFormInput name='total' placeholder='0.00' onChange={event=> handleFormChange(event, index)} value={form.total} /> </CCol>
+                            <CCol xs> {/* <CFormLabel></CFormLabel> */} <CButton color="danger" variant="outline" size="sm" onClick={()=> removeFields(index)}>Remove</CButton>
+                            </CCol>
+                        </CRow>
+                    </CListGroupItem>
+                </CListGroup> 
+                ) })} 
+
+                <CListGroup flush>
+                <CListGroupItem>
+                <CRow className="justify-content-between">
+                <CCol xs>
+                    <CButton color="secondary" size="sm" onClick={addFields}>Add More..</CButton>
+                </CCol>
             </CRow>
             </CListGroupItem>
             </CListGroup>
+            <p></p>
+            <CContainer id="totals">
+                <CRow className="justify-content-end">
+                    <CCol md={6}>
+                        <CInputGroup className="mb-3">
+                            <CFormLabel className="col-sm-2 col-form-label">
+                                <h6>Sub Total</h6>
+                            </CFormLabel>
+                            <CInputGroupText>$</CInputGroupText>
+                            <CFormInput type="number" placeholder="0.00" readOnly />
+                        </CInputGroup>
+                    </CCol>
+                </CRow>
+                <CRow className="justify-content-end">
+                    <CCol md={6}>
+                        <CInputGroup className="mb-3">
+                            <CFormLabel className="col-sm-2 col-form-label">Tax</CFormLabel>
+                            <CFormInput type="text" placeholder="GST" />
+                            <CFormLabel className="col-sm-2 col-form-label">Tax Rate</CFormLabel>
+                            <CFormInput type="number" placeholder="0.00" />
+                            <CInputGroupText>%</CInputGroupText>
+                        </CInputGroup>
+                    </CCol>
+                </CRow>
+                <CRow className="justify-content-end">
+                    <CCol md={6}>
+                        <CInputGroup className="mb-3">
+                            <CFormLabel className="col-sm-2 col-form-label">
+                                <h5>Total</h5>
+                            </CFormLabel>
+                            <CInputGroupText>$</CInputGroupText>
+                            <CFormInput type="number" placeholder="0.00" readOnly />
+                        </CInputGroup>
+                    </CCol>
+                </CRow>
+            </CContainer>  
 
-            {/* </div> */}
-  {itemFields.map((form, index) => {
-          return (
-            //   <div key={index}>
-                <CListGroup flush key={index}>
-            <CListGroupItem>
-                <CRow className="justify-content-between">
-                <CCol xs={3}>
-              {/* <CFormLabel>Item name</CFormLabel> */}
-              <CFormInput
-                name='name'
-                placeholder='Name'
-                onChange={event => handleFormChange(event, index)}
-                value={form.name}
-              />
-              </CCol>
-              <CCol xs={2}>
-              {/* <CFormLabel>Price</CFormLabel> */}
-              <CFormInput 
-                name='price'
-                placeholder='0'
-                onChange={event => handleFormChange(event, index)}
-                value={form.price}
-              />
-              </CCol>
-              
-              <CCol xs={2}>
-              {/* <CFormLabel>Qty</CFormLabel> */}
-              <CFormInput
-                name='quantity'
-                placeholder='quantity'
-                onChange={event => handleFormChange(event, index)}
-                value={form.quantity}
-              />
-              </CCol>
-              <CCol xs={2}>
-              {/* <CFormLabel>Total</CFormLabel> */}
-              <CFormInput
-                name='total'
-                placeholder='0.00'
-                onChange={event => handleFormChange(event, index)}
-                value={form.total}
-                />
-              </CCol>
-              <CCol xs={3}>
-            {/* <CFormLabel></CFormLabel> */}
-              <CButton color="danger" variant="outline" size="sm" onClick={() => removeFields(index)}>Remove</CButton>
-              </CCol>
-              </CRow>
-  </CListGroupItem>
-            </CListGroup>
-            // </div>
-          )
-        })}
-
-
-
-<CCol>
-      <CButton color="secondary" onClick={addFields}>Add More..</CButton>
-</CCol>
-
-<CCol md={6}>
-
-  <CInputGroup className="mb-3">
-  <CFormLabel className="col-sm-2 col-form-label">Total</CFormLabel>
-
-  <CInputGroupText>$</CInputGroupText>
-  <CFormInput
-  type="number"
-  placeholder="0.00"
-//   aria-label="readonly input example"
-  readOnly
-    />
-</CInputGroup>
-  </CCol>
-
-
-
-  {/* <CCol xs={12}>
-    <CFormInput id="inputAddress2" label="Address 2" placeholder="Apartment, studio, or floor"/>
-  </CCol> */}
-  <CCol md={6}>
-    <CFormInput id="paymentinstructions" label="paymentinstructions" 
-    placeholder="Payment instructions..." />
-  </CCol>
-  <CCol md={4}>
-    <CFormSelect id="frequency" label="frequency">
-      <option>Frequency...</option>
-      <option>...</option>
-    </CFormSelect>
-  </CCol>
-  <CCol md={2}>
-    <CFormInput id="inputZip" label="Zip" />
-  </CCol>
-  <CCol xs={12}>
-    <CFormCheck type="checkbox" id="gridCheck" label="Send reminders"/>
-  </CCol>
-  <CCol xs={12}>
-    
-  </CCol>
-
-
-
-
-
-
-</CForm>
-</CContainer>
+            <CRow>
+            <CCol md={6}>
+                <CFormInput id="paymentinstructions" label="paymentinstructions" placeholder="Payment instructions..." />
+            </CCol>
+            </CRow>
+            
+        </CForm>
+    </CContainer>
+        {/* </form> */}
 </div>
     );
 }
