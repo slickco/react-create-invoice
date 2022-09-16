@@ -1,7 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
-// import 'bootstrap/dist/css/bootstrap.min.css'
+// import './index.css';
+import 'bootstrap/dist/css/bootstrap.min.css'
+import '@coreui/bootstrap-react';
+// import '.scss/custom.scss';
+
 import App from './App';
 import NewInvoice from './NewInvoice';
 import AddRemove from './AddRemove';
