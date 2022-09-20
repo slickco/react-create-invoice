@@ -1,9 +1,7 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 // import 'bootstrap/dist/css/bootstrap.min.css'
 import { CForm, CCol, CFormInput, CButton, CFormSelect, CFormCheck, CContainer, 
 CInputGroup, CInputGroupText, CFormLabel, CRow, CListGroup, CListGroupItem} from '@coreui/bootstrap-react';
-
-import InvoiceHeader from "./InvoiceHeader";
 
 const options = {
   method: "GET",
@@ -121,29 +119,48 @@ function NewInvoice() {
       , rate_type: "Hourly"
       
     },
-  ])
+  ]) 
 
-  const updateTotals = () => {
+  // const [totals, setTotals] = [
+  //   setSub_total = itemFields.reduce((total,currentItem) =>  total = total + currentItem.total , 0 )
+  //   , setTotal = itemFields.reduce(((total,currentItem) =>  total = total + currentItem.total , 0 )) + itemFields.reduce((total,currentItem) =>  total = total + currentItem.total , 0 ) * tax_rate
+  // ]
+
+
+
+
+  function updateTotals() {
     var subTotal = 0;
+    
+    // var sub_t = 0;
+    // sub_t = itemFields.forEach(obj => {sub_t = sub_t + obj.price });
 
-    itemFields.forEach(i => {
+    const thisTotal=(itemFields.reduce((total,currentItem) =>  total = total + currentItem.total , 0 ));
+    
+    let data = [...itemFields]
+
+    data.forEach(i => {
       subTotal = subTotal + i['total']
     });
 
-    if (subTotal === 0) {
-      setSub_total(0)
-      setTotal_due(0)
-    }
-    else {
-    setSub_total(subTotal);
+    // if (subTotal === 0) {
+    //   setSub_total(0)
+    //   setTotal_due(0)
+    // }
+    // else { 
+
+    setSub_total(itemFields.reduce((total,currentItem) =>  total = total + currentItem.total , 0 ));
+    
     setTotal_due(subTotal + (subTotal * tax_rate))
-    }
+    // }
 
   };
 
   const updateTax = (e) => {
     setTax_rate(e.target.value / 100)
-    updateTotals()
+
+      updateTotals()
+    
   }
 
   const handleFormChange = (event, index) => {
@@ -171,9 +188,23 @@ function NewInvoice() {
     let data = [...itemFields];
     data.splice(index, 1)
     setitemFields(data)
+   
     updateTotals()
 
   }
+
+    // ✅ Remove one or more objects from state array
+  const removeObjectFromArray = (index) => {
+    // let data = [...itemFields];
+    setitemFields(current =>
+      current.filter((obj) => current.at(index) != obj),
+    );
+      
+    updateTotals()
+  };
+
+
+
 
   let handleSubmit = async (e) => {
     e.preventDefault();
@@ -231,12 +262,12 @@ function NewInvoice() {
             <CCol>
             <h1>Slick Co Demo </h1>
             </CCol>
-          <CCol md="auto">
-            <div gap-2 justify-content-md-end>
+          <CCol md="auto" justify-content-end="true">
+
                 <CButton variant="outline" color="secondary" >get link</CButton>
                 <CButton type="submit" >send</CButton>
             
-            </div>
+
                 </CCol>
           </CRow>
 
@@ -334,7 +365,8 @@ function NewInvoice() {
                             <CCol xs></CCol>
                         </CRow>
                     </CListGroupItem>
-                </CListGroup> {itemFields.map((form, index) => { return (
+                </CListGroup> 
+                {itemFields.map((form, index) => { return (
                 <CListGroup flush key={index}>
                     <CListGroupItem>
                         <CRow className="justify-content-between">
@@ -367,7 +399,12 @@ function NewInvoice() {
                                 <h6>Sub Total</h6>
                             </CFormLabel>
                             <CInputGroupText>$</CInputGroupText>
-                            <CFormInput type="number" placeholder={sub_total} value={sub_total} readOnly />
+                            { 
+                              <CFormInput type="number" placeholder={itemFields.reduce((total,currentItem) =>  total = total + currentItem.total , 0 )} value={itemFields.reduce((total,currentItem) =>  total = total + currentItem.total , 0 )} readOnly />
+                           
+                          
+                          }
+                            
                         </CInputGroup>
                     </CCol>
                 </CRow>
@@ -389,7 +426,7 @@ function NewInvoice() {
                                 <h5>Total</h5>
                             </CFormLabel>
                             <CInputGroupText>$</CInputGroupText>
-                            <CFormInput type="number" value={total_due} readOnly />
+                            <CFormInput type="number" value={ (itemFields.reduce((total,currentItem) =>  total = total + currentItem.total , 0 ) + itemFields.reduce((total,currentItem) =>  total = total + currentItem.total , 0 ) * tax_rate) } readOnly />
                         </CInputGroup>
                     </CCol>
                 </CRow>
