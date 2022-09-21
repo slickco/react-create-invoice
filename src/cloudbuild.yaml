@@ -1,0 +1,13 @@
+steps:
+    # Build the container image
+   - name: 'gcr.io/cloud-builders/docker'
+     args: ['build', '-t', 'gcr.io/super-5c452/github.com/slickadmin/reactprototype:$COMMIT_SHA', '.']
+    # Push the container image to Container Registry
+   - name: 'gcr.io/cloud-builders/docker'
+     args: ['push', 'gcr.io/super-5c452/github.com/slickadmin/reactprototype:$COMMIT_SHA']
+   # Deploy container image to Cloud Run
+   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+     entrypoint: gcloud
+     args: ['run', 'deploy', 'api', '--image', 'gcr.io/super-5c452/github.com/slickadmin/reactprototype:$COMMIT_SHA', '--region', 'us-west2']
+   images:
+  - gcr.io/super-5c452/github.com/slickadmin/reactprototype:$COMMIT_SHA
