@@ -11,3 +11,9 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+
+.form-control-read-only {
+  background-color: #f9f9f9;
+  opacity: 1;
+}

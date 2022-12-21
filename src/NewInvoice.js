@@ -3,26 +3,46 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import { CForm, CCol, CFormInput, CButton, CFormSelect, CFormCheck, CContainer, 
 CInputGroup, CInputGroupText, CFormLabel, CRow, CListGroup, CListGroupItem, setVisible, visible, CModal, CModalBody, CModalHeader, CModalFooter, CModalTitle, CTooltip, CLink} from '@coreui/react';
 
+import {Form, Col, InputGroup, Row, Button, Accordion, ListGroup, ListGroupItem, Container, Table, CloseButton, Card, Stack, Alert } from 'react-bootstrap';
+import { json } from "react-router";
+
 
 function NewInvoice() {
 
 
-  const [apikey, setapikey] = useState("");
-  const [providerid, setproviderid] = useState("");
+  const [apikey, setapikey] = useState("S0DQGFAYL8GpuiAPw5pd");
+  const [businessid, setBusinessid] = useState("");
 
 
-  const [created_by_user_id, setCreated_by_user_id] = useState("");
-  const [date_issued, setDate_issued] = useState();
-  const [invoice_id, setInvoice_id] = useState("");
+  const [created_by_user_id, setCreated_by_user_id] = useState("lloyd@slickco.io");
+  const [date_issued, setDate_issued] = useState(Date.now());
+  const [new_date_issued, setNewDate_issued] = useState(Date)
+
+  const dateIssuedConstructor = new Date();
+  const temp_date = dateIssuedConstructor.getDate();
+  dateIssuedConstructor.setDate(temp_date);
+  const display_date_issued = dateIssuedConstructor.toLocaleDateString('en-CA');
+  // setDate_issued(dateIssuedConstructor.getDate());
+
+  // const handleDateIssued = (e) => {
+  //   setDate_issued(display_date_issued);
+  // }
+
+
+
+  const [invoice_id, setInvoice_id] = useState("123");
   const [contact_id, setContact_id] = useState("");
+  const [billingName, setBillingName] = useState("");
+  const [contactName, setContactName] = useState("");
+  const [email, setEmail] = useState("");
   const [payment_terms, setPayment_Terms] = useState("");
   const [payment_online_enabled, setPayment_online_enabled] = useState(Boolean);
   const [payment_instructions, setPayment_instructions] = useState("");
-  const [billing_period_start, setBilling_period_start] = useState(new Date(Date.now));
-  const [billing_period_end, setBilling_period_end] = useState(new Date(Date.now));
+  // const [billing_period_start, setBilling_period_start] = useState(new Date(Date.now)); 
+  // const [billing_period_end, setBilling_period_end] = useState(new Date(Date.now));
   const [line_items, setLine_items] = useState("");
-  const [tax_rate, setTax_rate] = useState(Number);
-  const [total_tax, setTotal_tax] = useState(Number);
+  const [tax_rate, setTax_rate] = useState(0.0);
+  const [total_tax, setTotal_tax] = useState(0);
   const [sub_total, setSub_total] = useState(0);
   const [total_due, setTotal_due] = useState(0);
   const [total_discount, setTotal_discount] = useState("");
@@ -30,18 +50,12 @@ function NewInvoice() {
   const [parent_project_id, setParent_project_id] = useState("");
   const [deposit_amount, setDeposit_amount] = useState(Number);
   const [recurring_frequency, setRecurring_frequency] = useState("");
+  const [paymentDueDate, setPaymentDueDate] = useState(Date.now());
 
+  const [invoiceCreated, setInvoiceCreated] = useState(false);
+  const [newInvoiceId, setNewInvoiceId] = useState("");
   const [message, setMessage] = useState("");
   
-  // const [item, setItem] = useState(JSON);
-  // const [itemName, setItemName] = useState("");
-  // const [itemDescription, setDescription] = useState("");
-  // const [itemPrice, setPrice] = useState(Number);
-  // const [item_rate_type, setRate_type] = useState("");
-  // const [item_tax_rate, setItem_tax_rate] = useState(Number);
-  // const [item_quantity, setQuantity] = useState(Number);
-  // const [itemTotal, setTotal] = useState(Number);
-  // const [item_tags, setTags] = useState("");
 
   const options = {
     method: "GET",
@@ -50,107 +64,104 @@ function NewInvoice() {
       "Content-Type": "application/json",
       // "api-key": "b5dcb16e99af272d8fbd01dd722201bf",
       "api-key": apikey,
-      // "x-provider-id": "FPWir3NZZyW4MiYWJXN5",
-      "x-provider-id": providerid,
-      // "x-business-id": "6KYnUDZJy7SGHn2ga8Be"
-      "x-business-id": "demobiz"
+      "x-business-id": businessid
     }
   };
   
-  const liveUrl = "https://api.slickco.io/invoices"
+  const liveUrl = "https://api.slickco.io/v0/invoices"
 
-  // const theseLineItems = {
-  //   "Item1": {
-  //     "name": "string",
-  //     "description": "string",
-  //     "price": 0,
-  //     "rate_type": "Hourly",
-  //     "tax_rate": 0,
-  //     "quantity": 0,
-  //     "total": 0,
-  //     "tags": [
-  //       null
-  //     ]
-  //   },
-  //   "Item2": {
-  //     "name": "string",
-  //     "description": "string",
-  //     "price": 0,
-  //     "rate_type": "Hourly",
-  //     "tax_rate": 0,
-  //     "quantity": 0,
-  //     "total": 0,
-  //     "tags": [
-  //       null
-  //     ]
-  //   }
-  // }
 
-  const thesePaymentTerms = {
-    "demoTerm": {
+  const thesePaymentTerms = [
+    {
       "name": "Hello Terms",
       "description": "Why you need to pay by this day",
       "days": 30,
-      "payment_due_date": "2019-08-24T14:15:22Z",
+      "paymentDueDate": "2019-08-24",
       "discount": 0,
       "penalty": 0
   }
-}
-
-  
-  // function getLineItems(itemFields) {
-  //   let lineItems = []
-  //   var i = 0
-  //   itemFields.forEach(element => {
-  //     lineItems = lineItems[i][element];
-  //     i++;
-  //   });
-
-
-  //   // for (let index = 0; index (itemFields) < itemFields.length; index++) {
-  //   //   lineItems = lineItems[index][itemFields[index]];
-      
-  //   // }
-  //   return lineItems
-  // }
+]
 
   const [itemFields, setitemFields] = useState([
     { 
       name: ''
       , description: ''
-      , price: 0 
-      , quantity: 0
-      , total: 0
-      , rate_type: "Hourly"
+      , price: 0.0 
+      , quantity: 0.0
+      , total: 0.0
+      , serviceDate: new Date()
+      // , rate_type: "Hourly"
       
     },
   ]) 
 
+  const handleSetSubTotal = () => {
+    let subTotal = 0;
+    itemFields.forEach((item) => {
+      subTotal += item.total;
+    })
+    setSub_total(subTotal);
+  }
+
+  const handleSetTotalTax = () => {
+    let totalTax = 0;
+    itemFields.forEach((item) => {
+      totalTax += item.total * tax_rate;
+    })
+    setTotal_tax(totalTax);
+  }
+
+  const handleSetTotalDue = () => {
+    let totalDue = 0;
+    itemFields.forEach((item) => {
+      totalDue += item.total + (item.total * tax_rate);
+    })
+    setTotal_due(totalDue);
+  }
+  
 
   function updateTotals() {
-    var subTotal = 0;
+    // var subTotal = 0;
     
-    // var sub_t = 0;
-    // sub_t = itemFields.forEach(obj => {sub_t = sub_t + obj.price });
+    // let data = [...itemFields]
 
-    // const thisTotal=(itemFields.reduce((total,currentItem) =>  total = total + currentItem.total , 0 ));
-    
-    let data = [...itemFields]
-
-    data.forEach(i => {
-      subTotal = subTotal + i['total']
-    });
-
+    // data.forEach(i => {
+    //   subTotal = subTotal + i['total']
+    // });
   
-    setSub_total(subTotal);
-    setTotal_due(sub_total + (sub_total * tax_rate))
+    // setSub_total(subTotal);
+    // setTotal_due(sub_total + (sub_total * tax_rate))
+    // setAmount(sub_total + (sub_total * tax_rate))
+
+    handleSetSubTotal();
+    handleSetTotalTax();
+    handleSetTotalDue();
+    handlePaymentAmount();
 
   };
 
-  const updateTax = (e) => {
-    setTax_rate(e.target.value / 100)
+  // There must be a better way to handle this. Options like check if isNaN and check if null or "" are not working. Have not tried undefined yet.
+  const handleUpdateTax = (e) => {
+    let tax = 0;
+    if (e.target.value <= 1 ) {
+      tax = 0;
+    } else {
+      tax = e.target.value / 100;
+    }
 
-      updateTotals()
+    setTax_rate(tax);
+    handleSetTotalTax();
+    handleSetTotalDue();
+    handlePaymentAmount();
+  }
+
+
+  const updateTax = (e) => {
+    let tax = 0;
+    tax = e.target.value / 100;
+    setTax_rate(tax)
+
+    updateTotals()
     
   }
 
@@ -196,24 +207,48 @@ function NewInvoice() {
 
   const [visible, setVisible] = useState(false)
 
+  // Very good resource https://beta.reactjs.org/learn/updating-objects-in-state 
+
   const [clientDetails, setClientDetails] = useState(
     { 
-      contact_id: ""
-      , billing_name: ""
-      , contact_name: ""
+      contactId: ""
+      , billingName: ""
+      , contactName: ""
       , phone: ""
-      , email: ""
+      , email: "lloyd+test@slickco.io"
 
     },
   )
 
-  const handleClientChange = (event) => {
-    let data = [clientDetails];
-    data[event.target.name] = event.target.value;
-    setClientDetails(data);
 
+  const handleContactNameChange = (event) => {
+    setClientDetails(
+      {
+        ...clientDetails,
+        contactName: event.target.value
+
+      }
+    );
   }
+  const handleBillingNameChange = (event) => {
+    setClientDetails(
+      {
+        ...clientDetails,
+        billingName: event.target.value
 
+      }
+    );
+  }
+  const handleEmailChange = (event) => {
+    setClientDetails(
+      {
+        ...clientDetails,
+        email: event.target.value
+
+      }
+    );
+  }
+  
 
   let handleSubmit = async (e) => {
     e.preventDefault();
@@ -222,35 +257,48 @@ function NewInvoice() {
         method: "POST",
         headers: options.headers,
         body: JSON.stringify({
-          created_by_user_id: created_by_user_id,
-          date_issued: new Date(date_issued),
-          invoice_id: invoice_id,
-          contact_id: contact_id,
-          payment_terms: thesePaymentTerms,
-          payment_online_enabled: payment_online_enabled,
-          payment_instructions: payment_instructions,
-          payment_instructions: payment_instructions,
+          // createdByUserId: created_by_user_id,
+          // dateIssued: new Date(date_issued),
+          dateIssued: date_issued,
+          invoiceNumber: invoice_id,
+          // clientDetails: contact_id,
+          clientDetails: clientDetails,
+          // clientDetails: Object.assign({
+          //   billingName: billingName,
+          //   contactName: contactName,
+          //   email: email,
+          // }),
+          paymentTerms: thesePaymentTerms,
+          paymentOnlineEnabled: payment_online_enabled,
+          paymentInstructions: payment_instructions,
+          // paymentnstructions: payment_instructions,
           // billing_period_start: billing_period_start,
           // billing_period_end: billing_period_end,
           // line_items: theseLineItems,
-          line_items: Object.assign({}, itemFields),
-          tax_rate: tax_rate, 
-          total_tax: 0, 
-          total_due: total_due, 
-          total_discount: 0, 
-          status: "Draft", 
-          parent_project_id: parent_project_id,
-          deposit_amount: deposit_amount, 
-          recurring_frequency: "Monthly"
+          // lineItems: Object.assign({}, itemFields),
+          lineItems: Object.assign(itemFields),
+          taxRate: tax_rate, 
+          totalTax: 0, 
+          subTotal: sub_total, 
+          totalDue: total_due, 
+          paymentDueDate: date_issued, 
+          // totalDiscount: 0, 
+          // status: "Draft", 
+          // parentProjectId: parent_project_id,
+          // depositAmount: deposit_amount, 
+          // recurringFrequency: "Monthly"
         }),
       });
-      let resJson = await res.json();
+      let resJson = await res.json()
+      .then(setVisible(false))
+      .then((data) => {setNewInvoiceId(data["invoiceId"])})
+      .then((data) => {alert("Created invoice! ID: " + data["invoiceId"])})
+      .then(setInvoiceCreated(true));
       if (res.status === 200) {
-        setCreated_by_user_id("");
-        setDate_issued("");
-        setInvoice_id("");
-        setContact_id("");
-        setMessage("Invoice created successfully");
+        // setNewInvoiceId(resJson["invoiceId"])
+        setVisible(false)
+        // setInvoiceCreated(!invoiceCreated)
+        
       } else {
         setMessage("Some error occured");
       }
@@ -258,31 +306,132 @@ function NewInvoice() {
       console.log(err);
     }
   };
+
+  const [files, setFiles] = useState([]);
+
+  const handleFileUpload = (e) => {
+    setFiles(e.target.files);
+  };
+
+  const handleNewInvoiceID = (e) => {
+    setNewInvoiceId(e.target.value);
+  };
+
+
+  function getSendUrl() {
+    return liveUrl + "/" + newInvoiceId + "/send"
+  }
+
+  function getFiles() {
+    return files
+  }
+
+  const data = new FormData();
+  files.forEach((file, i) => {
+    data.append(`file-${i}`, file, file.name);
+  });
+
+  let handleSend = async (e) => {
+    e.preventDefault();
+    const attachments = new FormData()
+    attachments.append("attachments", getFiles())
+    try {
+      let res = await fetch(getSendUrl(), {
+        method: "POST",
+        headers: {
+          // Accept: "application/json",
+          "Content-Type": "application/json",
+          // "Content-Type": "multipart/form-data", (LEAVE THIS COMMENTED OUT - IT BREAKS THE REQUEST)
+          // "Content-Type": "multipart/form-data",
+          "api-key": apikey,
+          "x-business-id": businessid,
+        },
+        // body: JSON.stringify("attachments:" + getFiles()),
+        body: JSON.stringify(attachments),
+        // body: {"attachments" : ""},
+      });
+      let resJson = await res.json()
+      .then(setInvoiceCreated(false))
+      .then((data) => {
+        // alert("Sent invoice! Request ID: " + data["sendRequestId"])
+
+        <>
+      {
+        <Alert variant={'success'}>
+          Sent invoice! Request ID:  {data["sendRequestId"]}
+        </Alert>
+      }
+    </>
+
+      }
+      );
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const [amount, setAmount] = useState(total_due);
+  const [paymentModal, setPaymentModal] = useState(false);
+  
+  const handlePaymentAmount = (e) => {
+    setAmount(e.target.value);
+  };
+
+  const getTotalDue = () => {
+    setAmount(total_due);
+    return amount
+
+  };
+
+  let handlePayInvoice = async (e) => {
+    e.preventDefault();
+    try {
+      let res = await fetch("https://api.slickco.io/v0/transactions/payments/invoice/" + newInvoiceId , {
+        method: "POST",
+        headers: options.headers,
+        body: JSON.stringify({
+          timestamp: new Date(),
+          amount: amount,
+          description: "payment",
+          method: "Cash",
+          source: "Stripe",
+          sourceReferenceId: "Payment reference",
+          transaction_id: "dgdsgds"
+          // paymentNotes: "Payment notes",
+        }),
+      });
+      let resJson = await res.json()
+      .then(setInvoiceCreated(false))
+      .then((data) => {alert("Created payment! ID: " + data["transactionId"])}
+      );
+    } catch (err) {
+      console.log(err);
+    }
+  };
   
     return (
-      <div className="App">
-    <CContainer>
-      <CRow>
+      <div>
+    <Container>
+    <Row className="justify-content-between">
+              <Col md={6}>
+                <Form.Group className="mb-3" controlId="businessid">
+                  <Form.Label>Business ID</Form.Label>
+                  <Form.Control type="text" name="businessid" label="businessid" size="sm"
+                  value={businessid} placeholder="biz id" onChange={(e)=>setBusinessid(e.target.value)}
+                  />
+                </Form.Group>
+              </Col>
+              </Row>
 
-        
-        </CRow>
-        <CForm className="row g-3" onSubmit={handleSubmit}>
-
-          <CRow className="justify-content-between">
-            <CCol>
-            <h1>Slick Co Demo </h1>
-            </CCol>
+          {/* <Row className="justify-content-between"> */}
+            <Col>
+              <p></p>
+            <h2>Create Invoice </h2>
+            </Col>
           
-          <CCol md="auto" justify-content-end="true">
-
-
-                {/* <CButton variant="outline" color="secondary" >get link</CButton> */}
-                {/* <CButton type="submit" >send</CButton> */}
-                <CButton onClick={() => setVisible(!visible)} >Send Invoice</CButton>
-                
-                </CCol>
-          </CRow>
+          {/* </Row> */}
           <hr />
+        <Form className="row g-3" onSubmit={handleSubmit}>
                 <>
                 {/* <CButton onClick={() => setVisible(!visible)}>Vertically centered modal</CButton> */}
                 <CModal alignment="center" visible={visible} onClose={() => setVisible(false)}>
@@ -290,18 +439,19 @@ function NewInvoice() {
                     <CModalTitle>Thanks for trying Slick!</CModalTitle>
                   </CModalHeader>
                   <CModalBody>
-                    <p> We just need your APIKey and Provider ID to send this invoice </p>
+                    {/* <p> We just need your APIKey and a Business ID to send this invoice </p> */}
+                    <p> We just need a Business ID to create this invoice </p>
 
 
-                    <CFormInput type="text" id="apikey" label="API Key" 
+                    {/* <Form.Control type="text" id="apikey" label="API Key" 
                     value={apikey} onChange={(e)=>setapikey(e.target.value)} 
+                    /> */}
+
+                    <Form.Control type="text" id="businessId" label="Business ID" 
+                    value={businessid} onChange={(e)=>setBusinessid(e.target.value)} 
                     />
 
-                    <CFormInput type="text" id="providerid" label="Provider ID" 
-                    value={providerid} onChange={(e)=>setproviderid(e.target.value)} 
-                    />
-
-                  <p>Don't have either of these yet? Get in touch <CLink> api@slickco.io </CLink></p>
+                  {/* <p>Don't have this yet? Get in touch <CLink> api@slickco.io </CLink></p> */}
 
                   </CModalBody>
 
@@ -309,7 +459,99 @@ function NewInvoice() {
                     {/* <CButton color="secondary" onClick={() => setVisible(false)}>
                       Close
                     </CButton> */}
-                    <CButton type="submit" onClick={(e) => handleSubmit(e)}>Send Invoice</CButton>
+                    <CButton type="submit" onClick={(e) => handleSubmit(e)}>Create Invoice</CButton>
+                  </CModalFooter>
+
+                </CModal>
+          </>
+
+          <>
+                {/* <CButton onClick={() => setVisible(!visible)}>Vertically centered modal</CButton> */}
+                <CModal alignment="center" visible={invoiceCreated} onClose={() => setInvoiceCreated(false)}>
+                  <CModalHeader>
+                    <CModalTitle>Send Invoice</CModalTitle>
+                  </CModalHeader>
+                  <CModalBody>
+                    {/* <p> We just need your APIKey and a Business ID to send this invoice </p> */}
+                    <div className="mb-3">
+                      <Form.Label htmlFor="formFile" className="form-label">
+                      Invoice ID
+                      </Form.Label>
+                    <Form.Control type="text" id="invoiceId" label="Invoice Id" placeholder={newInvoiceId} onChange={(e) => handleNewInvoiceID(e)} value={newInvoiceId}>
+                      </Form.Control> 
+                      </div>
+                      < hr/>
+
+                    <h4> Send or add an attachment </h4>
+
+                    <div className="mb-3">
+                    <Form.Label htmlFor="formFileMultiple">Multiple files input example</Form.Label>
+                    <Form.Control type="file" id="formFileMultiple" onChange={(e) => handleFileUpload(e)} multiple/>
+                    </div>
+
+                    <hr/>
+
+
+
+                  {/* <p>Don't have this yet? Get in touch <CLink> api@slickco.io </CLink></p> */}
+
+                  </CModalBody>
+
+                  <CModalFooter className="justify-content-center">
+                    {/* <CButton color="secondary" onClick={() => setVisible(false)}>
+                      Close
+                    </CButton> */}
+                    <CButton type="submit" onClick={(e) => handleSend(e)}>Send Invoice</CButton>
+
+                  </CModalFooter>
+
+                </CModal>
+          </>
+          <>
+                {/* <CButton onClick={() => setVisible(!visible)}>Vertically centered modal</CButton> */}
+                <CModal alignment="center" visible={paymentModal} onClose={() => setPaymentModal(false)}>
+                  <CModalHeader>
+                    <CModalTitle>Pay Invoice</CModalTitle>
+                  </CModalHeader>
+                  <CModalBody>
+                    {/* <p> We just need your APIKey and a Business ID to send this invoice </p> */}
+                    <div className="mb-3">
+                      <Form.Label htmlFor="formFile" className="form-label">
+                      Invoice ID
+                      </Form.Label>
+                    <Form.Control type="text" id="invoiceId" label="Invoice Id" placeholder={newInvoiceId} onChange={(e) => handleNewInvoiceID(e)} value={newInvoiceId}>
+                      </Form.Control> 
+                      </div>
+                      < hr/>
+
+                    
+
+                    <h4>
+                      Pay Invoice
+                    </h4>
+
+
+                    
+                    <Form.Label>Amount</Form.Label>
+
+                    <CInputGroup className="mb-3">
+                            <CInputGroupText>$</CInputGroupText>
+
+                    <Form.Control type="text" id="amount" label="Amount" value={amount} placeholder={total_due} onChange={(e)=>handlePaymentAmount(e)} />
+                    </CInputGroup>
+
+
+
+
+                  {/* <p>Don't have this yet? Get in touch <CLink> api@slickco.io </CLink></p> */}
+
+                  </CModalBody>
+
+                  <CModalFooter className="justify-content-center">
+                    {/* <CButton color="secondary" onClick={() => setVisible(false)}>
+                      Close
+                    </CButton> */}
+                    <CButton type="submit" onClick={(e) => handlePayInvoice(e)}>Pay Invoice</CButton>
                   </CModalFooter>
 
                 </CModal>
@@ -317,73 +559,123 @@ function NewInvoice() {
 
 
 
+            {/* <h3>Business Info</h3> */}
+
+
+              
             <h3>Biller Contact Info</h3>
-            <CRow className="justify-content-between">
+            <Row className="justify-content-between">
                 <CCol md={6}>
-                    <CFormInput type="text" id="firstname" label="Contact Name" name='contact_name'
+                    {/* <Form.Control type="text" id="firstname" label="Contact Name" name='contactName'
                      onChange={(e)=>handleClientChange(e)} 
+                    /> */}
+                    {/* <Form.FloatingLabel label="Contact Name"> */}
+
+                    <Form.Label>Contact Name</Form.Label>
+                    <Form.Control type="text" label="Contact Name" name='contactName'
+                     onChange={e=>handleContactNameChange(e)} value={clientDetails.contactName} 
+                    //  {event=> handleFormChange(event, index)}
+                    placeholder="Conty Nahmé"
                     />
+                    {/* </Form.FloatingLabel> */}
                 </CCol>
                 <CCol md={6}>
-                    <CFormInput type="text" id="lastname" label="Billing Name" name='billing_name'
-                     onChange={(e)=>handleClientChange(e)} 
+                  {/* <Form.FloatingLabel label="Billing Name"> */}
+                    <Form.Label>Billing Name</Form.Label>
+                    <Form.Control type="text" label="Billing Name" name='billingName'
+                     onChange={(e)=>handleBillingNameChange(e)} value={clientDetails.billingName}
+                    placeholder="Billy Nameson"
                     />
+                    {/* </Form.FloatingLabel> */}
+                    {/* <Form.Control type="text" id="lastname" label="Billing Name" name='billingName'
+                     onChange={(e)=>setBillingName(e)} 
+                    /> */}
                 </CCol>
-            </CRow>
-            <CRow className="justify-content-between">
+            </Row>
+            <p>
+
+            </p>
+            <Row className="justify-content-between">
                 <CCol md={6}>
-                    <CFormInput type="email" id="theirEmail" label="Client email" name="email" 
-                    onChange={(e)=>handleClientChange(e)} />
+                  {/* <Form.FloatingLabel label="Client Email"> */}
+                <Form.Label>Client Email</Form.Label>
+                    <Form.Control type="email" label="Client email" name="email" 
+                    onChange={(e)=>handleEmailChange(e)} value={clientDetails.email}
+                    placeholder="email@email.com"
+                    />
+                    {/* </Form.FloatingLabel> */}
+                    {/* <Form.Control type="email" id="theirEmail" label="Client email" name="email" 
+                    onChange={(e)=>setEmail(e)} /> */}
                 </CCol>
 
-            </CRow>
+            </Row>
 
 
-            <CRow className="justify-content-between">
+            {/* <Row className="justify-content-between">
             <CCol md={6}>
             <CTooltip content="We'll use this to show who the invoice was sent from">
-                    <CFormInput type="email" id="yourEmail" label="Your email" value={created_by_user_id} onChange={(e)=>setCreated_by_user_id(e.target.value)} />
+                    <Form.Control type="email" id="yourEmail" label="Your email" value={created_by_user_id} onChange={(e)=>setCreated_by_user_id(e.target.value)} />
                     </CTooltip>
                 </CCol>
-            </CRow>
+            </Row> */}
 
             <hr />
             <h3>Invoice Details</h3>
-            <CRow className="justify-content-between">
-                <CCol sm="3">
-                    <CFormInput type="date" id="date_issued" label="Issue Date" 
+            <Row className="justify-content-between">
+                <CCol md="3">
+                <Form.Label>Issue Date</Form.Label>
+                    <Form.Control type="date" id="date_issued" label="Issue Date" 
+                    defaultValue={display_date_issued}
                     // value={date_issued} 
                     onChange={(e)=>setDate_issued(e.target.value)} />
                 </CCol>
-            </CRow>
-            
-            <CRow className="justify-content-between">
-                <CCol sm="3">
-                    <CFormInput type="text" value={invoice_id} label="Invoice Number" onChange={(e)=>setInvoice_id(e.target.value)} />
-                </CCol>
-                <CCol sm="3">
-                    <CFormInput type="text" label="Reference / PO Number"/>
-                </CCol>
-            </CRow>
 
-            <CRow className="justify-content-between">
-                <CCol sm="3">
+                <CCol md="3">
+                    <Form.Label>Invoice Number</Form.Label>
+                    <Form.Control type="number" value={invoice_id} label="Invoice Number" onChange={(e)=>setInvoice_id(e.target.value)} />
+                </CCol>
+
+            </Row>
+            
+            {/* <Row className="justify-content-between">
+                <CCol md="3">
+                    <Form.Label>Purchase Order Reference</Form.Label>
+                    <Form.Control type="text" label="Reference / PO Number"/>
+                </CCol>
+            </Row> */}
+
+            <p></p>
+
+            <Row className="justify-content-between">
+                <CCol md="3">
                     <CFormSelect id="terms" label="Payment terms">
-                        <option>Net 30</option>
                         <option>Same Day</option>
+                        <option>Net 30</option>
                     </CFormSelect>
                 </CCol>
-                <CCol sm="3">
-                    <CFormInput type="date" id="dueDate" label="Due Date" />
+                <CCol md="3">
+                    <Form.Label>Payment Due Date</Form.Label>
+                    <Form.Control type="date" id="dueDate" label="Due Date"
+                    defaultValue={display_date_issued}
+                    onChange={(e)=>setPaymentDueDate(e.target.value)} /> 
                 </CCol>
-            </CRow>
-            <CRow className="justify-content-between">
-                <CCol sm="3">
-                    <CFormCheck type="checkbox" id="gridCheck" label="Send reminders" />
-                </CCol>
-            </CRow>
-            <CRow className="justify-content-between">
-                <CCol sm="3">
+            </Row>
+            
+            <Row >
+              <p></p>
+                <Col md="3">
+                  <Form.Check
+                  type="switch"
+                  id="sendReminders"
+                  label="Send Payment Reminders"
+                  />
+
+                  <p></p>
+                </Col>
+            </Row>
+
+            <Row className="justify-content-between">
+                <CCol md="3">
                     <CFormSelect id="frequency" label="Recurring Invoice" placeholder="Frequency">
                         <option></option>
                         <option>Weekly</option>
@@ -391,119 +683,145 @@ function NewInvoice() {
                         <option>Quarterly</option>
                     </CFormSelect>
                 </CCol>
-            </CRow>
+            </Row>
             < hr/>
+
+
+
+
+            <h3>Invoice Items</h3>
+            <Table responsive="md" borderless >
+      <thead> 
+        <tr>
+          <th>Item</th>
+          <th>Price</th>
+          <th>Quantity</th>
+          <th>Amount</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody >
+      {itemFields.map((form, index) => { return ( 
+        <>
+        <tr key={index} >
+
+          <td >
+            <Form.Control  type="text" name='name' id="name" label="Name" placeholder="Name" value={form.name} onChange={(e)=>handleFormChange(e, index)} />
+          </td>
+          <td>
+            <Form.Control type="decimal" name="price" id="unitPrice" label="Unit Price" min="0" value={form.price} onChange={(e)=>handleFormChange(e, index)} />
+          </td>
+          <td>
+            <Form.Control type="decimal" name="quantity" id="quantity" label="Quantity" min="0" value={form.quantity} onChange={(e)=>handleFormChange(e, index)} />
+          </td>
+          <td>
+            <Form.Control type="decimal" name="total" id="total" label="Total" value={form.total} readOnly onChange={(e)=>handleFormChange(e, index)} />
+          </td>
+          <td>
+          <CloseButton size="sm" onClick={() => removeFields(index)} />
+          </td>
+        </tr>
+        <tr>
+          <td colSpan={2}>
+            <Form.Group as={Col} size="mb-2">
+            <Form.Control type="text" id="description" label="Description" placeholder="Description" name="description" value={form.description} onChange={(e)=>handleFormChange(e, index)} />
+            </Form.Group>
+          </td>
+          <td></td>
+          <td>
+            <Form.Control type="date" id="serviceDate" label="Service Date" name="serviceDate" 
+            // value={form.serviceDate}
+            // defaultValue={display_date_issued} 
+            onChange={(e)=>handleFormChange(e, index)} />
+          </td>
+
+            </tr>
+            </>
+            )})}
+      </tbody>
+    </Table>
+
+      <Row >
+        <Col sm="3">
+            <Button variant="secondary" size="sm" onClick={addFields}>Add More..</Button>
+      </Col>
+      </Row>
 
             
-            <h3>Line Items</h3> 
-            <CListGroup flush id="item headers">
-                    <CListGroupItem>
-                        <CRow className="justify-content-between">
-                            <CCol xs={4}>
-                                <CFormLabel>Item name</CFormLabel>
-                            </CCol>
-                            <CCol xs>
-                                <CFormLabel>Price</CFormLabel>
-                            </CCol>
-                            <CCol xs>
-                                <CFormLabel>Qty</CFormLabel>
-                            </CCol>
-                            <CCol xs>
-                                <CFormLabel>Total</CFormLabel>
-                            </CCol>
-                            <CCol xs></CCol>
-                        </CRow>
-                    </CListGroupItem>
-                </CListGroup> 
-                {itemFields.map((form, index) => { return (
-                <CListGroup flush key={index}>
-                    <CListGroupItem>
-                        <CRow className="justify-content-between">
-                            <CCol xs={4}> {/* <CFormLabel>Item name</CFormLabel> */} <CFormInput name='name' placeholder='Name' onChange={event=> handleFormChange(event, index)} value={form.name} /> </CCol>
-                            <CCol xs> {/* <CFormLabel>Price</CFormLabel> */} <CFormInput name='price' placeholder='0' type="number" onChange={event=> handleFormChange(event, index)} value={form.price} /> </CCol>
-                            <CCol xs> {/* <CFormLabel>Qty</CFormLabel> */} <CFormInput name='quantity' placeholder='quantity' type="number" onChange={event=> handleFormChange(event, index)} value={form.quantity} /> </CCol>
-                            <CCol xs> {/* <CFormLabel>Total</CFormLabel> */} <CFormInput name='total' placeholder='0.00' type='number' readOnly onChange={event=> handleFormChange(event, index)} value={form.total} /> </CCol>
-                            <CCol xs> {/* <CFormLabel></CFormLabel> */} <CButton color="danger" variant="outline" size="sm" onClick={()=> removeFields(index)}>Remove</CButton>
-                            </CCol>
-                        </CRow>
-                    </CListGroupItem>
-                </CListGroup> 
-                ) })} 
 
-                <CListGroup flush>
-                <CListGroupItem>
-                <CRow className="justify-content-between">
-                <CCol xs>
-                    <CButton color="secondary" size="sm" onClick={addFields}>Add More..</CButton>
-                </CCol>
-            </CRow>
-            </CListGroupItem>
-            </CListGroup>
-
-            <CContainer id="totals">
+            <Container id="totals">
             < hr/>
             <h3>Totals</h3>
-            <CForm className="row gy-2 gx-3">
-                <CRow className="justify-content-end">
+                <Row className="justify-content-end">
                     <CCol md={6}>
-                            <CFormLabel className="col-sm-2 col-form-label">
+                            <Form.Label className="col-sm-2 col-form-label">
                                 <h6>Sub Total</h6>
-                            </CFormLabel>
+                            </Form.Label>
                         <CInputGroup className="mb-3">
                             <CInputGroupText>$</CInputGroupText>
-                            { 
-                              <CFormInput type="number" placeholder={itemFields.reduce((total,currentItem) =>  total = total + currentItem.total , 0 )} value={itemFields.reduce((total,currentItem) =>  total = total + currentItem.total , 0 )} readOnly />
-                           
-                          
-                          }
+                             
+                              <Form.Control type="number" placeholder={itemFields.reduce((total,currentItem) =>  total = total + currentItem.total , 0 )} value={itemFields.reduce((total,currentItem) =>  total = total + currentItem.total , 0 )} readOnly disabled />
+
                             
                         </CInputGroup>
                     </CCol>
-                </CRow>
-                <CRow className="justify-content-end" >
+                </Row>
+
+                <Row className="justify-content-end" >
                     <CCol md={6}>
-                        <CInputGroup className="mb-3">
-                            <CFormLabel className="col-sm-2 col-form-label">Tax</CFormLabel>
-                            <CFormInput type="text" placeholder="Eg. GST" /> 
-                            </CInputGroup>
-                            </CCol>
-                            </CRow>
-                <CRow className="justify-content-end" >
-                    <CCol md={6}>
+                            <Form.Label className="col-sm-2 col-form-label">
+                              <h6>Tax Rate</h6>
+                            </Form.Label>
                       <CInputGroup>
-                            <CFormLabel className="col-sm-2 col-form-label">Tax Rate</CFormLabel>
-                            <CFormInput type="number" 
+                            <Form.Control type="decimal" min="0" placeholder="Eg. 10.5" defaultValue={0}
                             // value={tax_rate * 100} 
-                            onChange={(e)=>updateTax(e)}/>
+                            onChange={(e)=>handleUpdateTax(e)}/>
                             <CInputGroupText>%</CInputGroupText>
                         </CInputGroup>
                     </CCol>
-                </CRow>
-                <CRow className="justify-content-end">
+                </Row>
+                <Row className="justify-content-end">
                     <CCol md={6}>
-                            <CFormLabel className="col-sm-2 col-form-label">
+                            <Form.Label className="col-sm-2 col-form-label">
                                 <h5>Total</h5>
-                            </CFormLabel>
+                            </Form.Label>
                         <CInputGroup className="mb-3">
                             <CInputGroupText>$</CInputGroupText>
-                            <CFormInput type="number" value={ (itemFields.reduce((total,currentItem) =>  total = total + currentItem.total , 0 ) + itemFields.reduce((total,currentItem) =>  total = total + currentItem.total , 0 ) * tax_rate) } readOnly />
+                            <Form.Control type="number" value={ (itemFields.reduce((total,currentItem) =>  total = total + currentItem.total , 0 ) + itemFields.reduce((total,currentItem) =>  total = total + currentItem.total , 0 ) * tax_rate) } readOnly disabled />
                         </CInputGroup>
                     </CCol>
-                </CRow>
-                </CForm>
-            </CContainer>  
+                </Row>
+                {/* </CForm> */}
+            </Container>  
             <hr />
-            <CContainer>
-            <h3>Payment</h3>
-            <CRow>
+            <Container>
+            <h3>Payment Information</h3>
+            <Row>
             <CCol md={6}>
               
-                <CFormInput id="paymentinstructions" label="Payment Instructions" placeholder="How you would like to get paid..." />
+                <Form.Control id="paymentinstructions" label="Payment Instructions" placeholder="How you would like to get paid..." as="textarea" rows={3} />
+                
             </CCol>
-            </CRow>
-            </CContainer>
-        </CForm>
-    </CContainer>
+            </Row>
+            </Container>
+            <hr />
+            <Row className="justify-content-md-end">
+                      <CCol md="auto">
+
+
+                {/* <CButton variant="outline" color="secondary" >get link</CButton> */}
+                {/* <CButton type="submit" >send</CButton> */}
+                <Button onClick={() => setVisible(!visible)} >Create Invoice</Button> <Button onClick={() => setInvoiceCreated(!invoiceCreated)} >Send</Button> <Button onClick={() => setPaymentModal(!paymentModal)} >Pay</Button>
+                
+                </CCol>
+                <p></p>
+                <p></p>
+
+        </Row>
+        </Form>
+
+
+    </Container>
         {/* </form> */}
 </div>
     );

@@ -1,9 +1,12 @@
 .App {
-  display: flex;
-  justify-content: center;
-  margin-top: 5rem;
+  /* display: flex;
+  justify-content: center; */
+  margin-top: 2rem;
+  margin-bottom: 2rem;
 }
-input {
+
+
+/* input {
   display: block;
   width: 20rem;
   height: 2rem;
@@ -27,4 +30,4 @@ button:hover {
   font-size: 1.2em;
   text-align: center;
   color: #36a936;
-}
+} */

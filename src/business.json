@@ -1,0 +1,33 @@
+{
+  "operatingName": "string",
+  "legalName": "string",
+  "email": "string",
+  "phone": "string",
+  "address": {
+    "addressLine1": "string",
+    "addressLine2": "string",
+    "city": "string",
+    "zip_code": "string",
+    "state": "string",
+    "country": "string"
+  },
+  "website": "string",
+  "ownerUserId": "string",
+  "settings": {
+    "defaultTaxRate": 0,
+    "defaultCurrency": "string",
+    "taxId": "string",
+    "businessType": "string",
+    "industry": "string",
+    "logoUrl": "string",
+    "primaryColour": "#000000",
+    "secondaryColour": "#FFFFFF"
+  },
+  "invoiceSettings": {
+    "sendReminders": "string",
+    "defaultMessage": "string",
+    "paymentOnlineEnabled": true,
+    "defaultPaymentTerms": "string"
+  },
+  "additionalData": {}
+}
