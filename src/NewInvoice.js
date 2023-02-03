@@ -71,6 +71,7 @@ function NewInvoice() {
   const liveUrl = "https://api.slickco.io/v0/invoices"
 
 
+
   const thesePaymentTerms = [
     {
       "name": "Hello Terms",
@@ -119,19 +120,8 @@ function NewInvoice() {
     setTotal_due(totalDue);
   }
   
-
+      
   function updateTotals() {
-    // var subTotal = 0;
-    
-    // let data = [...itemFields]
-
-    // data.forEach(i => {
-    //   subTotal = subTotal + i['total']
-    // });
-  
-    // setSub_total(subTotal);
-    // setTotal_due(sub_total + (sub_total * tax_rate))
-    // setAmount(sub_total + (sub_total * tax_rate))
 
     handleSetSubTotal();
     handleSetTotalTax();
@@ -403,34 +393,107 @@ function NewInvoice() {
       let resJson = await res.json()
       .then(setInvoiceCreated(false))
       .then((data) => {alert("Created payment! ID: " + data["transactionId"])}
-      );
+      );  
     } catch (err) {
       console.log(err);
     }
   };
+
+
+  const [businessIdsList, setBusinessIdsList] = useState([]);
+
+  const handleSelectBusiness = async (e) => {
+
+    setBusinessid(e)
+    console.log(e)
+    businessIdsList.map((entry) => {
+      if (entry["id"] === e) {
+        if (entry["settings"]["defaultTaxRate"] === null) {
+          setTax_rate(0)
+        }
+        setTax_rate(entry["settings"]["defaultTaxRate"])
+        console.log(entry["settings"]["defaultTaxRate"])
+      }
+    } 
+    )
+};
+
   
+  const handleGetBusinessIDs = async () => {
+    const bizOptions = {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        // "api-key": "b5dcb16e99af272d8fbd01dd722201bf",
+        "api-key": "S0DQGFAYL8GpuiAPw5pd"
+        // "x-business-id": businessid
+      }
+    };
+
+    try {
+      let res = await fetch('https://api.slickco.io/v0/businesses', {
+        method: "GET",
+        headers: bizOptions.headers,
+      });
+      // let resJson = await res.json()
+      // .then((data) => {setBusinessIdsList(data)}
+      // .then((data) => {console.log(data)}
+      // );
+
+      const data = await res.json();
+      setBusinessIdsList(data);
+      console.log(data);
+      
+    } catch (err) {
+      console.log(err);
+    }
+  };
+ 
     return (
+      useEffect(() => {
+        handleGetBusinessIDs();
+      }, []),
       <div>
     <Container>
+    <Col>
+            <h1>Create Invoice </h1>
+            </Col>
     <Row className="justify-content-between">
               <Col md={6}>
                 <Form.Group className="mb-3" controlId="businessid">
+                <Form.Label>Businesses</Form.Label>
+                  {/* <CFormSelect type="form-select" name="businessids" size="sm" onChange={(e)=>setBusinessid(e.target.value)}> */}
+                  <CFormSelect type="form-select" name="businessids" size="sm" onChange={(e) => handleSelectBusiness(e.target.value)}>
+
+                    <option value="0">Select a business</option>
+
+                    {businessIdsList.map(business => (
+                      <option value={business.id} >
+                        "{business.operatingName}"
+                      </option>
+                    )
+                    )}
+                </CFormSelect>
+
                   <Form.Label>Business ID</Form.Label>
                   <Form.Control type="text" name="businessid" label="businessid" size="sm"
                   value={businessid} placeholder="biz id" onChange={(e)=>setBusinessid(e.target.value)}
                   />
+
+                  
                 </Form.Group>
+                
               </Col>
               </Row>
 
+              <hr />
+
           {/* <Row className="justify-content-between"> */}
-            <Col>
-              <p></p>
-            <h2>Create Invoice </h2>
-            </Col>
+
           
           {/* </Row> */}
-          <hr />
+          {/* <hr /> */}
         <Form className="row g-3" onSubmit={handleSubmit}>
                 <>
                 {/* <CButton onClick={() => setVisible(!visible)}>Vertically centered modal</CButton> */}
@@ -773,7 +836,7 @@ function NewInvoice() {
                               <h6>Tax Rate</h6>
                             </Form.Label>
                       <CInputGroup>
-                            <Form.Control type="decimal" min="0" placeholder="Eg. 10.5" defaultValue={0}
+                            <Form.Control type="decimal" min="0" placeholder="Eg. 10.5" defaultValue={tax_rate}
                             // value={tax_rate * 100} 
                             onChange={(e)=>handleUpdateTax(e)}/>
                             <CInputGroupText>%</CInputGroupText>

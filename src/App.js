@@ -8,6 +8,9 @@ import NewInvoice from './NewInvoice';
 import GridComplexExample from './GridComplexExample';
 import CreateNewInvoice from './CreateNewInvoice';
 import Businesses from './Businesses';
+import AllBusinesses from './AllBusinesses';
+import ViewBusiness from './ViewBusiness';
+
 import NewProvider from './Provider';
 
 export default function App() {
@@ -27,19 +30,20 @@ export default function App() {
                 <Nav.Link href="/">Home</Nav.Link>
                 <Nav.Link href="/new/business">New Business</Nav.Link>
                 <Nav.Link href="/new/invoice">New Invoice</Nav.Link>
+                {/* <Nav.Link href="/businesses/businessId">View Business</Nav.Link> */}
                 <NavDropdown title="Dropdown" id="basic-nav-dropdown">
-                  <NavDropdown.Item href="/new/otherinvoice">
+                  {/* <NavDropdown.Item href="/new/otherinvoice">
                     Other new Invoice
-                    </NavDropdown.Item>
-                  <NavDropdown.Item href="/users/4200">
-                    Users
-                    </NavDropdown.Item>
+                    </NavDropdown.Item> */}
+                  {/* <NavDropdown.Item href="/invoices/invoiceId">
+                    Example Invoices List
+                    </NavDropdown.Item> */}
                   <NavDropdown.Item href="/gce">
-                    Grid Complex Example
+                    Example User Profile 
                   </NavDropdown.Item>
-                  <NavDropdown.Item href="#action/3.3">
+                  {/* <NavDropdown.Item href="#action/3.3">
                     Something
-                  </NavDropdown.Item>
+                  </NavDropdown.Item> */}
                   <NavDropdown.Divider />
                   <NavDropdown.Item href="/does-not-exist">
                     404
@@ -55,9 +59,10 @@ export default function App() {
         {/* 👇️ Wrap your Route components in a Routes component */}
         <Routes>
           <Route path="/new/invoice" element={<NewInvoice />} />
-          <Route path="/new/otherinvoice" element={<CreateNewInvoice />} />
+          {/* <Route path="/new/otherinvoice" element={<CreateNewInvoice />} /> */}
           {/* 👇️ handle dynamic path */}
-          <Route path="/users/:userId" element={<Users />} />
+          <Route path="/invoices/:invoiceId" element={<Invoices />} />
+          <Route path="/businesses/:businessId" element={<Business />} />
           <Route path="/" element={< Home />} />
           <Route path="new/business" element={<NewBusiness />} />
           <Route path="/gce" element={<GridComplexExample />} />
@@ -77,12 +82,24 @@ export default function App() {
 }
 
 function Home() {
-  return <h2>Slick Demo - "Small B" Perspective </h2>;
+  // return <h2>Slick Demo - "Small B" Perspective </h2> ;
+  return <AllBusinesses />;
 }
 
-
-function Users() {
+function Business() {
   const params = useParams();
 
-  return <h2>Users: {params.userId}</h2>;
+  return <ViewBusiness businessId={params.businessId} />;
+}
+
+// function Users() {
+//   const params = useParams();
+
+//   return <h2>Users: {params.userId}</h2>;
+// }
+
+function Invoices() {
+  const params = useParams();
+
+  return <h2>Invoices: {params.invoiceId}</h2>;
 }

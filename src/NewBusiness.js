@@ -118,9 +118,8 @@ function NewBusiness() {
         <div>
             <Container>
             <Col>
-                <p></p>
             {/* <h1>Programa Demo</h1> */}
-            <h2>Create Business </h2>
+            <h1>Create Business </h1>
             <hr></hr>
             </Col>
                 <Row>

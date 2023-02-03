@@ -12,7 +12,7 @@ const options = {
     }
 };
 
-const baseUrl = 'https://api.slickco.io/businesses';
+const baseUrl = 'https://api.slickco.io/v0/businesses';
 
 const [businessids, setBusinessIds] = useState([]);
 const [businesses, setBusinesses] = useState([]);
@@ -55,37 +55,37 @@ const getBusiness = async (id) => {
 
 
 
-// const Business =  {
-//       operatingName: 'string',
-//       legalName: 'string',
-//       email: 'string',
-//       phone: 'string',
-//       address: {
-//         addressLine1: 'string',
-//         addressLine2: 'string',
-//         city: 'string',
-//         zip_code: 'string',
-//         state: 'string',
-//         country: 'string'
-//       },
-//       website: 'string',
-//       ownerUserId: 'string',
-//       settings: {
-//         defaultTaxRate: 0,
-//         defaultCurrency: 'string',
-//         taxId: 'string',
-//         businessType: 'string',
-//         industry: 'string',
-//         logoUrl: 'string',
-//         primaryColour: '#000000'
-//       },
-//       invoiceSettings: {
-//         sendReminders: 'string',
-//         defaultMessage: 'string',
-//         paymentOnlineEnabled: true,
-//         defaultPaymentTerms: 'string'
-//       }
-//     }
+const Business =  {
+      operatingName: 'string',
+      legalName: 'string',
+      email: 'string',
+      phone: 'string',
+      address: {
+        addressLine1: 'string',
+        addressLine2: 'string',
+        city: 'string',
+        zip_code: 'string',
+        state: 'string',
+        country: 'string'
+      },
+      website: 'string',
+      ownerUserId: 'string',
+      settings: {
+        defaultTaxRate: 0,
+        defaultCurrency: 'string',
+        taxId: 'string',
+        businessType: 'string',
+        industry: 'string',
+        logoUrl: 'string',
+        primaryColour: '#000000'
+      },
+      invoiceSettings: {
+        sendReminders: 'string',
+        defaultMessage: 'string',
+        paymentOnlineEnabled: true,
+        defaultPaymentTerms: 'string'
+      }
+    }
 
     useEffect (() => { 
         handleBusinessIds();
