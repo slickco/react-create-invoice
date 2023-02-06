@@ -458,7 +458,7 @@ function NewInvoice() {
         handleGetBusinessIDs();
       }, []),
       <div>
-    <Container>
+    <Container className='h-100 '>
     <Col>
             <h1>Create Invoice </h1>
             </Col>

@@ -178,7 +178,7 @@ const GetAllBusinesses = () => {
       </Modal>
 
 
-            <Container>
+            <Container className='h-100 ' >
             <h1>All Businesses</h1>
             <hr></hr>
               

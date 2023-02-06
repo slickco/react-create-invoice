@@ -116,7 +116,7 @@ function NewBusiness() {
 
     return (
         <div>
-            <Container>
+            <Container className='h-100 '>
             <Col>
             {/* <h1>Programa Demo</h1> */}
             <h1>Create Business </h1>

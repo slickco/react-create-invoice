@@ -17,8 +17,8 @@ import reportWebVitals from './reportWebVitals';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <div className="App d-flex flex-column align-items-center justify-content-center w-100">
-      <Container> 
+    <div className="App d-flex flex-column align-items-center justify-content-center w-100 h-100">
+      <Container > 
         <App />
     {/* <HeaderWithRouter /> */}
     {/* <NewBusiness />
