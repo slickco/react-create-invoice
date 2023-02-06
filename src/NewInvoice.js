@@ -54,6 +54,8 @@ function NewInvoice() {
 
   const [invoiceCreated, setInvoiceCreated] = useState(false);
   const [newInvoiceId, setNewInvoiceId] = useState("");
+  const [invoiceIdSet, setInvoiceIdSet] = useState(false);
+
   const [message, setMessage] = useState("");
   
 
@@ -305,6 +307,7 @@ function NewInvoice() {
 
   const handleNewInvoiceID = (e) => {
     setNewInvoiceId(e.target.value);
+    setInvoiceIdSet(true);
   };
 
 
@@ -464,7 +467,7 @@ function NewInvoice() {
                 <Form.Group className="mb-3" controlId="businessid">
                 <Form.Label>Businesses</Form.Label>
                   {/* <CFormSelect type="form-select" name="businessids" size="sm" onChange={(e)=>setBusinessid(e.target.value)}> */}
-                  <CFormSelect type="form-select" name="businessids" size="sm" onChange={(e) => handleSelectBusiness(e.target.value)}>
+                  <CFormSelect type="form-select" name="businessids" size="auto" onChange={(e) => handleSelectBusiness(e.target.value)}>
 
                     <option value="0">Select a business</option>
 
@@ -477,8 +480,8 @@ function NewInvoice() {
                 </CFormSelect>
 
                   <Form.Label>Business ID</Form.Label>
-                  <Form.Control type="text" name="businessid" label="businessid" size="sm"
-                  value={businessid} placeholder="biz id" onChange={(e)=>setBusinessid(e.target.value)}
+                  <Form.Control type="text" name="businessid" label="businessid" size="auto"
+                  value={businessid} placeholder="biz id" disabled='true'  onChange={(e)=>setBusinessid(e.target.value)}
                   />
 
                   

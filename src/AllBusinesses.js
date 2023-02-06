@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import {Form, Col, InputGroup, Row, Button, Accordion, ListGroup, ListGroupItem, Container, Table, CloseButton, Modal, ModalBody, ModalDialog, setVisible, visible } from 'react-bootstrap';
+import {BrowserRouter as Router, Route, Link, Routes} from 'react-router-dom';
+// import { Link } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
+
+import {Form, Col, InputGroup, Row, Button, Accordion, ListGroup, ListGroupItem, Container, Table, CloseButton, Modal, ModalBody, ModalDialog, setVisible, visible, ButtonGroup, ButtonProps } from 'react-bootstrap';
 
 
 const exampleBusiness = {
@@ -77,6 +80,7 @@ const options = {
 
 const baseUrl = 'https://api.slickco.io/v0/businesses';
 
+
 const ViewBusiness = ({ match }) => {
     const [business, setBusiness] = useState({});
     const [loading, setLoading] = useState(true);
@@ -106,6 +110,19 @@ const OneBusinessComponent = ({ data }) => {
     );
 };
 
+
+const handleClickNewInvoice = (e) => {
+    console.log(e);
+    // const Navigate = useNavigate();
+    
+    // function handleClick() {
+    //     Navigate('/newinvoice');
+    // }
+    
+    // const goto = Link.to('/newinvoice');
+    // console.log(goto);
+
+}
 
 
 const GetAllBusinesses = () => {
@@ -153,6 +170,8 @@ const GetAllBusinesses = () => {
             <p>Tax ID: <strong>{modaldata.settings.taxId}</strong></p>
             <p>Business Type: <strong>{modaldata.settings.businesType}</strong></p>
             <p>Industry: <strong>{modaldata.settings.industry}</strong></p>
+
+            {/* < Button variant="primary" value={modaldata.id} title='New Invoice' onClick={e => handleClickNewInvoice(e.target.value) } >New Invoice</Button> */}
             
 
         </Modal.Body>
@@ -168,24 +187,26 @@ const GetAllBusinesses = () => {
                     <thead>
                         <tr>
                             <th>Slick Business ID</th>
-                            <th>Business Name</th>
+                            <th>Operating Name</th>
                             <th>Email</th>
                             <th>Phone</th>
                             {/* <th>Address</th> */}
-                            <th>Website</th>
+                            {/* <th>Website</th> */}
                         </tr>
                     </thead>
                     <tbody>
-                        {businesses.map(business => (
+                        {businesses.map(business => ( 
+                            (
                             <tr onClick={ () => handleClickBusiness(business)} >
                                 <td>{business.id}</td>
                                 <td>{business.operatingName}</td>
                                 <td>{business.email}</td>
                                 <td>{business.phone}</td>
                                 {/* <td>{business.address.addressLine1}</td> */}
-                                <td>{business.website}</td>
+                                {/* <td>{business.website}</td> */}
                             </tr>
-                        ))}
+                        )
+                         ))}
                     </tbody>
                 </Table>
                 </Row>

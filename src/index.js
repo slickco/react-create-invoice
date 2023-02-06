@@ -5,10 +5,10 @@ import ReactDOM from 'react-dom/client';
 import Container from 'react-bootstrap/Container';
 
 import App from './App';
-import NewInvoice from './NewInvoice';
-import AddRemove from './AddRemove';
-import NewBusiness from './NewBusiness';
-import CreateNewInvoice from './CreateNewInvoice';
+// import NewInvoice from './NewInvoice';
+// import AddRemove from './AddRemove';
+// import NewBusiness from './NewBusiness';
+// import CreateNewInvoice from './CreateNewInvoice';
 
 import reportWebVitals from './reportWebVitals';
 // import HeaderWithRouter from './Header';
