@@ -8,7 +8,8 @@ import SidebarMenu from 'react-bootstrap';
 import NewBusiness from './NewBusiness';
 import NewInvoice from './NewInvoice';
 import GridComplexExample from './GridComplexExample';
-import CreateNewInvoice from './legacy/CreateNewInvoice';
+// import CreateNewInvoice from './legacy/CreateNewInvoice';
+import CreateInvoiceItems from './components/CreateInvoiceItems';
 import Businesses from './Businesses';
 import AllBusinesses from './AllBusinesses';
 import ViewBusiness from './ViewBusiness';
@@ -22,30 +23,26 @@ export default function App() {
       
         <nav>
           
-          <Navbar expand="lg">
-            <Navbar.Brand href="/" className="App-logo">
+          <Navbar expand="lg" className=''>
+            <Navbar.Brand href="/new/invoice" className="App-logo">
               Slick Demo
             </Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
               <Nav className="mr-auto">
-                <Nav.Link href="/">Home</Nav.Link>
-                <Nav.Link href="/new/business">New Business</Nav.Link>
-                <Nav.Link href="/new/invoice">New Invoice</Nav.Link>
+                {/* <Nav.Link href="/">Home</Nav.Link> */}
+                {/* <Nav.Link href="/new/business">New Business</Nav.Link> */}
+                <Nav.Link href="/new/invoice">Create Invoice</Nav.Link>
                 {/* <Nav.Link href="/businesses/businessId">View Business</Nav.Link> */}
                 <NavDropdown title="Dropdown" id="basic-nav-dropdown">
-                  {/* <NavDropdown.Item href="/new/otherinvoice">
-                    Other new Invoice
-                    </NavDropdown.Item> */}
-                  {/* <NavDropdown.Item href="/invoices/invoiceId">
-                    Example Invoices List
-                    </NavDropdown.Item> */}
+                  <NavDropdown.Item href="/items">
+                    Example Items Component
+                    </NavDropdown.Item>
+{/* 
                   <NavDropdown.Item href="/gce">
                     Example User Profile 
-                  </NavDropdown.Item>
-                  {/* <NavDropdown.Item href="#action/3.3">
-                    Something
                   </NavDropdown.Item> */}
+
                   <NavDropdown.Divider />
                   <NavDropdown.Item href="/does-not-exist">
                     404
@@ -61,7 +58,7 @@ export default function App() {
         {/* 👇️ Wrap your Route components in a Routes component */}
         <Routes>
           <Route path="/new/invoice" element={<NewInvoice />} />
-          {/* <Route path="/new/otherinvoice" element={<CreateNewInvoice />} /> */}
+          <Route path="/items" element={<CreateInvoiceItems />} />
           {/* 👇️ handle dynamic path */}
           <Route path="/invoices/:invoiceId" element={<Invoices />} />
           <Route path="/businesses/:businessId" element={<Business />} />
@@ -94,11 +91,6 @@ function Business() {
   return <ViewBusiness businessId={params.businessId} />;
 }
 
-// function Users() {
-//   const params = useParams();
-
-//   return <h2>Users: {params.userId}</h2>;
-// }
 
 function Invoices() {
   const params = useParams();

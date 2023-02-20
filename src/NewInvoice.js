@@ -1,16 +1,17 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css'
-import { CForm, CCol, CFormInput, CButton, CFormSelect, CFormCheck, CContainer, 
-CInputGroup, CInputGroupText, CFormLabel, CRow, CListGroup, CListGroupItem, setVisible, visible, CModal, CModalBody, CModalHeader, CModalFooter, CModalTitle, CTooltip, CLink} from '@coreui/react';
+import { CCol, CButton, CFormSelect,
+CInputGroup, CInputGroupText, CModal, CModalBody, CModalHeader, CModalFooter, CModalTitle} from '@coreui/react';
 
-import {Form, Col, InputGroup, Row, Button, Accordion, ListGroup, ListGroupItem, Container, Table, CloseButton, Card, Stack, Alert } from 'react-bootstrap';
+import {Form, Col, InputGroup, Row, Button, Accordion, ListGroup, ListGroupItem, Container, Table, CloseButton, Card, Stack, Alert, FormSelect, FloatingLabel, Modal, ModalBody, ModalDialog, ModalTitle } from 'react-bootstrap';
 import { json } from "react-router";
 
 
 function NewInvoice() {
 
 
-  const [apikey, setapikey] = useState("S0DQGFAYL8GpuiAPw5pd");
+  // const [apikey, setapikey] = useState("S0DQGFAYL8GpuiAPw5pd");
+  const [apikey, setapikey] = useState("fd48e7589d2d4639bd439dae12fc6fa16af34e50b3bbbda35860a4fc9bd2261e");
   const [businessid, setBusinessid] = useState("");
 
 
@@ -22,13 +23,6 @@ function NewInvoice() {
   const temp_date = dateIssuedConstructor.getDate();
   dateIssuedConstructor.setDate(temp_date);
   const display_date_issued = dateIssuedConstructor.toLocaleDateString('en-CA');
-  // setDate_issued(dateIssuedConstructor.getDate());
-
-  // const handleDateIssued = (e) => {
-  //   setDate_issued(display_date_issued);
-  // }
-
-
 
   const [invoice_id, setInvoice_id] = useState("123");
   const [contact_id, setContact_id] = useState("");
@@ -38,8 +32,7 @@ function NewInvoice() {
   const [payment_terms, setPayment_Terms] = useState("");
   const [payment_online_enabled, setPayment_online_enabled] = useState(Boolean);
   const [payment_instructions, setPayment_instructions] = useState("");
-  // const [billing_period_start, setBilling_period_start] = useState(new Date(Date.now)); 
-  // const [billing_period_end, setBilling_period_end] = useState(new Date(Date.now));
+
   const [line_items, setLine_items] = useState("");
   const [tax_rate, setTax_rate] = useState(0.0);
   const [total_tax, setTotal_tax] = useState(0);
@@ -65,7 +58,7 @@ function NewInvoice() {
       Accept: "application/json",
       "Content-Type": "application/json",
       // "api-key": "b5dcb16e99af272d8fbd01dd722201bf",
-      "api-key": apikey,
+      "x-api-key": apikey,
       "x-business-id": businessid
     }
   };
@@ -93,7 +86,6 @@ function NewInvoice() {
       , quantity: 0.0
       , total: 0.0
       , serviceDate: new Date()
-      // , rate_type: "Hourly"
       
     },
   ]) 
@@ -332,11 +324,8 @@ function NewInvoice() {
       let res = await fetch(getSendUrl(), {
         method: "POST",
         headers: {
-          // Accept: "application/json",
           "Content-Type": "application/json",
-          // "Content-Type": "multipart/form-data", (LEAVE THIS COMMENTED OUT - IT BREAKS THE REQUEST)
-          // "Content-Type": "multipart/form-data",
-          "api-key": apikey,
+          "x-api-key": apikey,
           "x-business-id": businessid,
         },
         // body: JSON.stringify("attachments:" + getFiles()),
@@ -347,7 +336,6 @@ function NewInvoice() {
       .then(setInvoiceCreated(false))
       .then((data) => {
         // alert("Sent invoice! Request ID: " + data["sendRequestId"])
-
         <>
       {
         <Alert variant={'success'}>
@@ -429,7 +417,7 @@ function NewInvoice() {
         Accept: "application/json",
         "Content-Type": "application/json",
         // "api-key": "b5dcb16e99af272d8fbd01dd722201bf",
-        "api-key": "S0DQGFAYL8GpuiAPw5pd"
+        "x-api-key": apikey
         // "x-business-id": businessid
       }
     };
@@ -466,8 +454,9 @@ function NewInvoice() {
               <Col md={6}>
                 <Form.Group className="mb-3" controlId="businessid">
                 <Form.Label>Businesses</Form.Label>
+                {/* <FloatingLabel controlId="floatingSelect" label="Select a business"> */}
                   {/* <CFormSelect type="form-select" name="businessids" size="sm" onChange={(e)=>setBusinessid(e.target.value)}> */}
-                  <CFormSelect type="form-select" name="businessids" size="auto" onChange={(e) => handleSelectBusiness(e.target.value)}>
+                  <FormSelect type="form-select" name="businessids" size="auto" onChange={(e) => handleSelectBusiness(e.target.value)}>
 
                     <option value="0">Select a business</option>
 
@@ -477,7 +466,7 @@ function NewInvoice() {
                       </option>
                     )
                     )}
-                </CFormSelect>
+                </FormSelect>
 
                   <Form.Label>Business ID</Form.Label>
                   <Form.Control type="text" name="businessid" label="businessid" size="auto"
@@ -631,100 +620,73 @@ function NewInvoice() {
               
             <h3>Biller Contact Info</h3>
             <Row className="justify-content-between">
-                <CCol md={6}>
+                <Col md={6}>
                     {/* <Form.Control type="text" id="firstname" label="Contact Name" name='contactName'
                      onChange={(e)=>handleClientChange(e)} 
                     /> */}
-                    {/* <Form.FloatingLabel label="Contact Name"> */}
 
                     <Form.Label>Contact Name</Form.Label>
                     <Form.Control type="text" label="Contact Name" name='contactName'
                      onChange={e=>handleContactNameChange(e)} value={clientDetails.contactName} 
-                    //  {event=> handleFormChange(event, index)}
                     placeholder="Conty Nahmé"
                     />
-                    {/* </Form.FloatingLabel> */}
-                </CCol>
-                <CCol md={6}>
-                  {/* <Form.FloatingLabel label="Billing Name"> */}
+                </Col>
+                <Col md={6}>
                     <Form.Label>Billing Name</Form.Label>
                     <Form.Control type="text" label="Billing Name" name='billingName'
                      onChange={(e)=>handleBillingNameChange(e)} value={clientDetails.billingName}
                     placeholder="Billy Nameson"
                     />
-                    {/* </Form.FloatingLabel> */}
-                    {/* <Form.Control type="text" id="lastname" label="Billing Name" name='billingName'
-                     onChange={(e)=>setBillingName(e)} 
-                    /> */}
-                </CCol>
+                </Col>
             </Row>
             <p>
 
             </p>
             <Row className="justify-content-between">
-                <CCol md={6}>
-                  {/* <Form.FloatingLabel label="Client Email"> */}
+                <Col md={6}>
                 <Form.Label>Client Email</Form.Label>
                     <Form.Control type="email" label="Client email" name="email" 
                     onChange={(e)=>handleEmailChange(e)} value={clientDetails.email}
                     placeholder="email@email.com"
                     />
-                    {/* </Form.FloatingLabel> */}
-                    {/* <Form.Control type="email" id="theirEmail" label="Client email" name="email" 
-                    onChange={(e)=>setEmail(e)} /> */}
-                </CCol>
+                </Col>
 
             </Row>
-
-
-            {/* <Row className="justify-content-between">
-            <CCol md={6}>
-            <CTooltip content="We'll use this to show who the invoice was sent from">
-                    <Form.Control type="email" id="yourEmail" label="Your email" value={created_by_user_id} onChange={(e)=>setCreated_by_user_id(e.target.value)} />
-                    </CTooltip>
-                </CCol>
-            </Row> */}
 
             <hr />
             <h3>Invoice Details</h3>
             <Row className="justify-content-between">
-                <CCol md="3">
+                <Col md="3">
                 <Form.Label>Issue Date</Form.Label>
                     <Form.Control type="date" id="date_issued" label="Issue Date" 
                     defaultValue={display_date_issued}
                     // value={date_issued} 
                     onChange={(e)=>setDate_issued(e.target.value)} />
-                </CCol>
+                </Col>
 
-                <CCol md="3">
+                <Col md="3">
                     <Form.Label>Invoice Number</Form.Label>
                     <Form.Control type="number" value={invoice_id} label="Invoice Number" onChange={(e)=>setInvoice_id(e.target.value)} />
-                </CCol>
+                </Col>
 
             </Row>
             
-            {/* <Row className="justify-content-between">
-                <CCol md="3">
-                    <Form.Label>Purchase Order Reference</Form.Label>
-                    <Form.Control type="text" label="Reference / PO Number"/>
-                </CCol>
-            </Row> */}
 
             <p></p>
 
             <Row className="justify-content-between">
-                <CCol md="3">
+                <Col md="3">
                     <CFormSelect id="terms" label="Payment terms">
                         <option>Same Day</option>
                         <option>Net 30</option>
                     </CFormSelect>
-                </CCol>
-                <CCol md="3">
+                </Col>
+                <Col md="3">
                     <Form.Label>Payment Due Date</Form.Label>
                     <Form.Control type="date" id="dueDate" label="Due Date"
                     defaultValue={display_date_issued}
                     onChange={(e)=>setPaymentDueDate(e.target.value)} /> 
-                </CCol>
+                </Col>
             </Row>
             
             <Row >
@@ -741,20 +703,20 @@ function NewInvoice() {
             </Row>
 
             <Row className="justify-content-between">
-                <CCol md="3">
+                <Col md="3">
                     <CFormSelect id="frequency" label="Recurring Invoice" placeholder="Frequency">
                         <option></option>
                         <option>Weekly</option>
                         <option>Monthly</option>
                         <option>Quarterly</option>
                     </CFormSelect>
-                </CCol>
+                </Col>
             </Row>
             < hr/>
 
 
 
-
+            <Container id="items">
             <h3>Invoice Items</h3>
             <Table responsive="md" borderless >
       <thead> 
@@ -796,8 +758,6 @@ function NewInvoice() {
           <td></td>
           <td>
             <Form.Control type="date" id="serviceDate" label="Service Date" name="serviceDate" 
-            // value={form.serviceDate}
-            // defaultValue={display_date_issued} 
             onChange={(e)=>handleFormChange(e, index)} />
           </td>
 
@@ -812,6 +772,7 @@ function NewInvoice() {
             <Button variant="secondary" size="sm" onClick={addFields}>Add More..</Button>
       </Col>
       </Row>
+      </Container>
 
             
 
@@ -819,7 +780,7 @@ function NewInvoice() {
             < hr/>
             <h3>Totals</h3>
                 <Row className="justify-content-end">
-                    <CCol md={6}>
+                    <Col md={6}>
                             <Form.Label className="col-sm-2 col-form-label">
                                 <h6>Sub Total</h6>
                             </Form.Label>
@@ -830,11 +791,11 @@ function NewInvoice() {
 
                             
                         </CInputGroup>
-                    </CCol>
+                    </Col>
                 </Row>
 
                 <Row className="justify-content-end" >
-                    <CCol md={6}>
+                    <Col md={6}>
                             <Form.Label className="col-sm-2 col-form-label">
                               <h6>Tax Rate</h6>
                             </Form.Label>
@@ -844,10 +805,10 @@ function NewInvoice() {
                             onChange={(e)=>handleUpdateTax(e)}/>
                             <CInputGroupText>%</CInputGroupText>
                         </CInputGroup>
-                    </CCol>
+                    </Col>
                 </Row>
                 <Row className="justify-content-end">
-                    <CCol md={6}>
+                    <Col md={6}>
                             <Form.Label className="col-sm-2 col-form-label">
                                 <h5>Total</h5>
                             </Form.Label>
@@ -855,7 +816,7 @@ function NewInvoice() {
                             <CInputGroupText>$</CInputGroupText>
                             <Form.Control type="number" value={ (itemFields.reduce((total,currentItem) =>  total = total + currentItem.total , 0 ) + itemFields.reduce((total,currentItem) =>  total = total + currentItem.total , 0 ) * tax_rate) } readOnly disabled />
                         </CInputGroup>
-                    </CCol>
+                    </Col>
                 </Row>
                 {/* </CForm> */}
             </Container>  
@@ -863,23 +824,23 @@ function NewInvoice() {
             <Container>
             <h3>Payment Information</h3>
             <Row>
-            <CCol md={6}>
+            <Col md={6}>
               
                 <Form.Control id="paymentinstructions" label="Payment Instructions" placeholder="How you would like to get paid..." as="textarea" rows={3} />
                 
-            </CCol>
+            </Col>
             </Row>
             </Container>
             <hr />
             <Row className="justify-content-md-end">
-                      <CCol md="auto">
+                      <Col md="auto">
 
 
                 {/* <CButton variant="outline" color="secondary" >get link</CButton> */}
                 {/* <CButton type="submit" >send</CButton> */}
                 <Button onClick={() => setVisible(!visible)} >Create Invoice</Button> <Button onClick={() => setInvoiceCreated(!invoiceCreated)} >Send</Button> <Button onClick={() => setPaymentModal(!paymentModal)} >Pay</Button>
                 
-                </CCol>
+                </Col>
                 <p></p>
                 <p></p>
 
