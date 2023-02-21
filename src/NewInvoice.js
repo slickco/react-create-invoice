@@ -470,7 +470,7 @@ function NewInvoice() {
 
                   <Form.Label>Business ID</Form.Label>
                   <Form.Control type="text" name="businessid" label="businessid" size="auto"
-                  value={businessid} placeholder="biz id" disabled='true'  onChange={(e)=>setBusinessid(e.target.value)}
+                  value={businessid} placeholder="biz id" disabled="true"  onChange={(e)=>setBusinessid(e.target.value)}
                   />
 
                   

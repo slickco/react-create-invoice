@@ -2,7 +2,6 @@ import React from 'react';
 import {BrowserRouter as Router, Route, Link, Routes} from 'react-router-dom';
 import {useParams} from 'react-router-dom';
 
-
 import { Navbar, Nav, NavDropdown, Card } from "react-bootstrap";
 import SidebarMenu from 'react-bootstrap';
 import NewBusiness from './NewBusiness';
@@ -62,7 +61,7 @@ export default function App() {
           {/* 👇️ handle dynamic path */}
           <Route path="/invoices/:invoiceId" element={<Invoices />} />
           <Route path="/businesses/:businessId" element={<Business />} />
-          <Route path="/" element={< Home />} />
+          <Route path="/" element={< NewInvoice />} />
           <Route path="new/business" element={<NewBusiness />} />
           <Route path="/gce" element={<GridComplexExample />} />
           {/* 👇️ only match this when no other routes match */}

@@ -54,7 +54,6 @@ const getBusiness = async (id) => {
 }
 
 
-
 const Business =  {
       operatingName: 'string',
       legalName: 'string',
