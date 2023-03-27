@@ -1,17 +1,14 @@
 import { useEffect, useState } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css'
-import { CCol, CButton, CFormSelect,
-CInputGroup, CInputGroupText, CModal, CModalBody, CModalHeader, CModalFooter, CModalTitle} from '@coreui/react';
+import { CInputGroupText, CModal, CModalBody, CModalHeader, CModalFooter, CModalTitle} from '@coreui/react';
+import {Form, Col, InputGroup, Row, Button, Container, Table, CloseButton, Alert, FormSelect } from 'react-bootstrap';
 
-import {Form, Col, InputGroup, Row, Button, Accordion, ListGroup, ListGroupItem, Container, Table, CloseButton, Card, Stack, Alert, FormSelect, FloatingLabel, Modal, ModalBody, ModalDialog, ModalTitle } from 'react-bootstrap';
-import { json } from "react-router";
-
+const liveUrl = "https://api.slickco.io/v0/invoices";
+const APIKey = "";
 
 function NewInvoice() {
 
-
-  // const [apikey, setapikey] = useState("S0DQGFAYL8GpuiAPw5pd");
-  const [apikey, setapikey] = useState("fd48e7589d2d4639bd439dae12fc6fa16af34e50b3bbbda35860a4fc9bd2261e");
+  const [apikey, setapikey] = useState(APIKey);
   const [businessid, setBusinessid] = useState("");
 
 
@@ -57,14 +54,11 @@ function NewInvoice() {
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
-      // "api-key": "b5dcb16e99af272d8fbd01dd722201bf",
       "x-api-key": apikey,
       "x-business-id": businessid
     }
   };
   
-  const liveUrl = "https://api.slickco.io/v0/invoices"
-
 
 
   const thesePaymentTerms = [
@@ -85,7 +79,6 @@ function NewInvoice() {
       , price: 0.0 
       , quantity: 0.0
       , total: 0.0
-      , serviceDate: new Date()
       
     },
   ]) 
@@ -179,7 +172,6 @@ function NewInvoice() {
 
   }
 
-    // ✅ Remove one or more objects from state array
   const removeObjectFromArray = (index) => {
     // let data = [...itemFields];
     setitemFields(current =>
@@ -190,8 +182,6 @@ function NewInvoice() {
   };
 
   const [visible, setVisible] = useState(false)
-
-  // Very good resource https://beta.reactjs.org/learn/updating-objects-in-state 
 
   const [clientDetails, setClientDetails] = useState(
     { 
@@ -241,42 +231,29 @@ function NewInvoice() {
         method: "POST",
         headers: options.headers,
         body: JSON.stringify({
-          // createdByUserId: created_by_user_id,
-          // dateIssued: new Date(date_issued),
+
           dateIssued: date_issued,
           invoiceNumber: invoice_id,
-          // clientDetails: contact_id,
+
           clientDetails: clientDetails,
-          // clientDetails: Object.assign({
-          //   billingName: billingName,
-          //   contactName: contactName,
-          //   email: email,
-          // }),
+
           paymentTerms: thesePaymentTerms,
           paymentOnlineEnabled: payment_online_enabled,
           paymentInstructions: payment_instructions,
-          // paymentnstructions: payment_instructions,
-          // billing_period_start: billing_period_start,
-          // billing_period_end: billing_period_end,
-          // line_items: theseLineItems,
-          // lineItems: Object.assign({}, itemFields),
+
           lineItems: Object.assign(itemFields),
           taxRate: tax_rate, 
           totalTax: 0, 
           subTotal: sub_total, 
           totalDue: total_due, 
           paymentDueDate: date_issued, 
-          // totalDiscount: 0, 
-          // status: "Draft", 
-          // parentProjectId: parent_project_id,
-          // depositAmount: deposit_amount, 
-          // recurringFrequency: "Monthly"
+
         }),
       });
       let resJson = await res.json()
       .then(setVisible(false))
-      .then((data) => {setNewInvoiceId(data["invoiceId"])})
-      .then((data) => {alert("Created invoice! ID: " + data["invoiceId"])})
+      .then((data) => {setNewInvoiceId(data["id"])})
+      .then((data) => {alert("Created invoice! ID: " + data["id"])})
       .then(setInvoiceCreated(true));
       if (res.status === 200) {
         // setNewInvoiceId(resJson["invoiceId"])
@@ -416,46 +393,47 @@ function NewInvoice() {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
-        // "api-key": "b5dcb16e99af272d8fbd01dd722201bf",
         "x-api-key": apikey
-        // "x-business-id": businessid
       }
     };
 
-    try {
-      let res = await fetch('https://api.slickco.io/v0/businesses', {
-        method: "GET",
-        headers: bizOptions.headers,
-      });
-      // let resJson = await res.json()
-      // .then((data) => {setBusinessIdsList(data)}
-      // .then((data) => {console.log(data)}
-      // );
+    if (businessIdsList.length === 0) {
+      try {
+        let res = await fetch('https://api.slickco.io/v0/businesses', {
+          method: "GET",
+          headers: bizOptions.headers,
+        });
+        // let resJson = await res.json()
+        // .then((data) => {setBusinessIdsList(data)}
+        // .then((data) => {console.log(data)}
+        // );
 
-      const data = await res.json();
-      setBusinessIdsList(data);
-      console.log(data);
-      
-    } catch (err) {
-      console.log(err);
+        const data = await res.json();
+        setBusinessIdsList(data);
+        console.log(data);
+        
+      } catch (err) {
+        console.log(err);
+      }
     }
-  };
+    };
  
     return (
       useEffect(() => {
         handleGetBusinessIDs();
-      }, []),
-      <div>
-    <Container className='h-100 '>
+      }),
+      <div className='text-small'>
+    <Container className='h-100' 
+    style={{
+      text: 'small'
+    }}>
     <Col>
             <h1>Create Invoice </h1>
             </Col>
-    <Row className="justify-content-between">
-              <Col md={6}>
+            <Row className="justify-content-between">
                 <Form.Group className="mb-3" controlId="businessid">
+                  <Col md={5}>
                 <Form.Label>Businesses</Form.Label>
-                {/* <FloatingLabel controlId="floatingSelect" label="Select a business"> */}
-                  {/* <CFormSelect type="form-select" name="businessids" size="sm" onChange={(e)=>setBusinessid(e.target.value)}> */}
                   <FormSelect type="form-select" name="businessids" size="auto" onChange={(e) => handleSelectBusiness(e.target.value)}>
 
                     <option value="0">Select a business</option>
@@ -467,25 +445,24 @@ function NewInvoice() {
                     )
                     )}
                 </FormSelect>
-
+                
+                </Col>
+                <Col md={5}>
                   <Form.Label>Business ID</Form.Label>
                   <Form.Control type="text" name="businessid" label="businessid" size="auto"
-                  value={businessid} placeholder="biz id" disabled="true"  onChange={(e)=>setBusinessid(e.target.value)}
+                  value={businessid} placeholder="biz id" disabled  onChange={(e)=>setBusinessid(e.target.value)}
                   />
 
                   
-                </Form.Group>
                 
               </Col>
+                </Form.Group>
               </Row>
 
               <hr />
 
-          {/* <Row className="justify-content-between"> */}
 
-          
-          {/* </Row> */}
-          {/* <hr /> */}
+
         <Form className="row g-3" onSubmit={handleSubmit}>
                 <>
                 {/* <CButton onClick={() => setVisible(!visible)}>Vertically centered modal</CButton> */}
@@ -494,27 +471,22 @@ function NewInvoice() {
                     <CModalTitle>Thanks for trying Slick!</CModalTitle>
                   </CModalHeader>
                   <CModalBody>
-                    {/* <p> We just need your APIKey and a Business ID to send this invoice </p> */}
+
                     <p> We just need a Business ID to create this invoice </p>
 
-
-                    {/* <Form.Control type="text" id="apikey" label="API Key" 
-                    value={apikey} onChange={(e)=>setapikey(e.target.value)} 
-                    /> */}
 
                     <Form.Control type="text" id="businessId" label="Business ID" 
                     value={businessid} onChange={(e)=>setBusinessid(e.target.value)} 
                     />
 
-                  {/* <p>Don't have this yet? Get in touch <CLink> api@slickco.io </CLink></p> */}
 
                   </CModalBody>
 
                   <CModalFooter className="justify-content-center">
-                    {/* <CButton color="secondary" onClick={() => setVisible(false)}>
+                    <Button color="secondary" onClick={() => setVisible(false)}>
                       Close
-                    </CButton> */}
-                    <CButton type="submit" onClick={(e) => handleSubmit(e)}>Create Invoice</CButton>
+                    </Button>
+                    <Button type="submit" onClick={(e) => handleSubmit(e)}>Create Invoice</Button>
                   </CModalFooter>
 
                 </CModal>
@@ -532,44 +504,34 @@ function NewInvoice() {
                       <Form.Label htmlFor="formFile" className="form-label">
                       Invoice ID
                       </Form.Label>
+                    
                     <Form.Control type="text" id="invoiceId" label="Invoice Id" placeholder={newInvoiceId} onChange={(e) => handleNewInvoiceID(e)} value={newInvoiceId}>
                       </Form.Control> 
                       </div>
                       < hr/>
 
-                    <h4> Send or add an attachment </h4>
-
-                    <div className="mb-3">
-                    <Form.Label htmlFor="formFileMultiple">Multiple files input example</Form.Label>
-                    <Form.Control type="file" id="formFileMultiple" onChange={(e) => handleFileUpload(e)} multiple/>
-                    </div>
-
-                    <hr/>
 
 
 
-                  {/* <p>Don't have this yet? Get in touch <CLink> api@slickco.io </CLink></p> */}
+
 
                   </CModalBody>
 
                   <CModalFooter className="justify-content-center">
-                    {/* <CButton color="secondary" onClick={() => setVisible(false)}>
-                      Close
-                    </CButton> */}
-                    <CButton type="submit" onClick={(e) => handleSend(e)}>Send Invoice</CButton>
+
+                    <Button type="submit" onClick={(e) => handleSend(e)}>Send Invoice</Button>
 
                   </CModalFooter>
 
                 </CModal>
           </>
           <>
-                {/* <CButton onClick={() => setVisible(!visible)}>Vertically centered modal</CButton> */}
                 <CModal alignment="center" visible={paymentModal} onClose={() => setPaymentModal(false)}>
                   <CModalHeader>
                     <CModalTitle>Pay Invoice</CModalTitle>
                   </CModalHeader>
                   <CModalBody>
-                    {/* <p> We just need your APIKey and a Business ID to send this invoice </p> */}
+
                     <div className="mb-3">
                       <Form.Label htmlFor="formFile" className="form-label">
                       Invoice ID
@@ -589,41 +551,31 @@ function NewInvoice() {
                     
                     <Form.Label>Amount</Form.Label>
 
-                    <CInputGroup className="mb-3">
+                    <InputGroup className="mb-3">
                             <CInputGroupText>$</CInputGroupText>
 
                     <Form.Control type="text" id="amount" label="Amount" value={amount} placeholder={total_due} onChange={(e)=>handlePaymentAmount(e)} />
-                    </CInputGroup>
+                    </InputGroup>
 
 
 
 
-                  {/* <p>Don't have this yet? Get in touch <CLink> api@slickco.io </CLink></p> */}
 
                   </CModalBody>
 
                   <CModalFooter className="justify-content-center">
-                    {/* <CButton color="secondary" onClick={() => setVisible(false)}>
-                      Close
-                    </CButton> */}
-                    <CButton type="submit" onClick={(e) => handlePayInvoice(e)}>Pay Invoice</CButton>
+
+                    <Button type="submit" onClick={(e) => handlePayInvoice(e)}>Pay Invoice</Button>
                   </CModalFooter>
 
                 </CModal>
           </>
 
 
-
-            {/* <h3>Business Info</h3> */}
-
-
               
             <h3>Biller Contact Info</h3>
             <Row className="justify-content-between">
                 <Col md={6}>
-                    {/* <Form.Control type="text" id="firstname" label="Contact Name" name='contactName'
-                     onChange={(e)=>handleClientChange(e)} 
-                    /> */}
 
                     <Form.Label>Contact Name</Form.Label>
                     <Form.Control type="text" label="Contact Name" name='contactName'
@@ -676,10 +628,11 @@ function NewInvoice() {
 
             <Row className="justify-content-between">
                 <Col md="3">
-                    <CFormSelect id="terms" label="Payment terms">
+                  <Form.Label>Payment Terms</Form.Label>
+                    <FormSelect id="terms" label="Payment terms">
                         <option>Same Day</option>
                         <option>Net 30</option>
-                    </CFormSelect>
+                    </FormSelect>
                 </Col>
                 <Col md="3">
                     <Form.Label>Payment Due Date</Form.Label>
@@ -689,32 +642,7 @@ function NewInvoice() {
                 </Col>
             </Row>
             
-            <Row >
-              <p></p>
-                <Col md="3">
-                  <Form.Check
-                  type="switch"
-                  id="sendReminders"
-                  label="Send Payment Reminders"
-                  />
-
-                  <p></p>
-                </Col>
-            </Row>
-
-            <Row className="justify-content-between">
-                <Col md="3">
-                    <CFormSelect id="frequency" label="Recurring Invoice" placeholder="Frequency">
-                        <option></option>
-                        <option>Weekly</option>
-                        <option>Monthly</option>
-                        <option>Quarterly</option>
-                    </CFormSelect>
-                </Col>
-            </Row>
             < hr/>
-
-
 
             <Container id="items">
             <h3>Invoice Items</h3>
@@ -750,16 +678,8 @@ function NewInvoice() {
           </td>
         </tr>
         <tr>
-          <td colSpan={2}>
-            <Form.Group as={Col} size="mb-2">
-            <Form.Control type="text" id="description" label="Description" placeholder="Description" name="description" value={form.description} onChange={(e)=>handleFormChange(e, index)} />
-            </Form.Group>
-          </td>
           <td></td>
-          <td>
-            <Form.Control type="date" id="serviceDate" label="Service Date" name="serviceDate" 
-            onChange={(e)=>handleFormChange(e, index)} />
-          </td>
+
 
             </tr>
             </>
@@ -769,7 +689,7 @@ function NewInvoice() {
 
       <Row >
         <Col sm="3">
-            <Button variant="secondary" size="sm" onClick={addFields}>Add More..</Button>
+            <Button variant="secondary" size="sm" onClick={addFields}>Add Item</Button>
       </Col>
       </Row>
       </Container>
@@ -784,13 +704,13 @@ function NewInvoice() {
                             <Form.Label className="col-sm-2 col-form-label">
                                 <h6>Sub Total</h6>
                             </Form.Label>
-                        <CInputGroup className="mb-3">
+                        <InputGroup className="mb-3">
                             <CInputGroupText>$</CInputGroupText>
                              
                               <Form.Control type="number" placeholder={itemFields.reduce((total,currentItem) =>  total = total + currentItem.total , 0 )} value={itemFields.reduce((total,currentItem) =>  total = total + currentItem.total , 0 )} readOnly disabled />
 
                             
-                        </CInputGroup>
+                        </InputGroup>
                     </Col>
                 </Row>
 
@@ -799,12 +719,12 @@ function NewInvoice() {
                             <Form.Label className="col-sm-2 col-form-label">
                               <h6>Tax Rate</h6>
                             </Form.Label>
-                      <CInputGroup>
+                      <InputGroup>
                             <Form.Control type="decimal" min="0" placeholder="Eg. 10.5" defaultValue={tax_rate}
                             // value={tax_rate * 100} 
                             onChange={(e)=>handleUpdateTax(e)}/>
                             <CInputGroupText>%</CInputGroupText>
-                        </CInputGroup>
+                        </InputGroup>
                     </Col>
                 </Row>
                 <Row className="justify-content-end">
@@ -812,10 +732,10 @@ function NewInvoice() {
                             <Form.Label className="col-sm-2 col-form-label">
                                 <h5>Total</h5>
                             </Form.Label>
-                        <CInputGroup className="mb-3">
+                        <InputGroup className="mb-3">
                             <CInputGroupText>$</CInputGroupText>
                             <Form.Control type="number" value={ (itemFields.reduce((total,currentItem) =>  total = total + currentItem.total , 0 ) + itemFields.reduce((total,currentItem) =>  total = total + currentItem.total , 0 ) * tax_rate) } readOnly disabled />
-                        </CInputGroup>
+                        </InputGroup>
                     </Col>
                 </Row>
                 {/* </CForm> */}
@@ -836,8 +756,6 @@ function NewInvoice() {
                       <Col md="auto">
 
 
-                {/* <CButton variant="outline" color="secondary" >get link</CButton> */}
-                {/* <CButton type="submit" >send</CButton> */}
                 <Button onClick={() => setVisible(!visible)} >Create Invoice</Button> <Button onClick={() => setInvoiceCreated(!invoiceCreated)} >Send</Button> <Button onClick={() => setPaymentModal(!paymentModal)} >Pay</Button>
                 
                 </Col>
